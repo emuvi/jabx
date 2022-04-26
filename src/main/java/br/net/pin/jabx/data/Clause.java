@@ -3,9 +3,9 @@ package br.net.pin.jabx.data;
 import com.google.gson.Gson;
 
 public class Clause {
-  public Boolean not;
-  public Condition like;
-  public Valued value;
+  public Same same;
+  public Condition likes;
+  public Valued valued;
   public Tie tie;
   
   @Override

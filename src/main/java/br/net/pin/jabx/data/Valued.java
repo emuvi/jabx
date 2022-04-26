@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 
 public class Valued {
   public String name;
-  public Object data; 
+  public Object data;
   public Nature type;
 
   @Override
