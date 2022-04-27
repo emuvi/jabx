@@ -4,26 +4,23 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.sql.Connection;
-import java.util.List;
-import br.net.pin.jabx.data.DBLink;
+import br.net.pin.jabx.data.DataLink;
 import br.net.pin.jabx.data.Head;
 import br.net.pin.jabx.data.Select;
-import br.net.pin.jabx.data.Table;
 import br.net.pin.jabx.flow.Pace;
 import br.net.pin.jabx.flow.PaceCmd;
 
 public class CSVExport extends Thread {
 
-  private final DBLink origin;
+  private final DataLink origin;
   private final File destiny;
   private final Pace pace;
 
-  public CSVExport(DBLink origin, File destiny) {
+  public CSVExport(DataLink origin, File destiny) {
     this(origin, destiny, null);
   }
 
-  public CSVExport(DBLink origin, File destiny, Pace pace) {
+  public CSVExport(DataLink origin, File destiny, Pace pace) {
     super("ExportToCSV");
     this.origin = origin;
     this.destiny = destiny;

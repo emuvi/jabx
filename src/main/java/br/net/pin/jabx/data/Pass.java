@@ -2,7 +2,7 @@ package br.net.pin.jabx.data;
 
 import com.google.gson.Gson;
 
-public class Pass {
+public class Pass implements Fixable {
   private byte[] data;
 
   public Pass() {

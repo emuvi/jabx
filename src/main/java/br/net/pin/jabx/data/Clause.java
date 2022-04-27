@@ -2,7 +2,7 @@ package br.net.pin.jabx.data;
 
 import com.google.gson.Gson;
 
-public class Clause {
+public class Clause implements Fixable {
   public Same same;
   public Condition likes;
   public Valued valued;

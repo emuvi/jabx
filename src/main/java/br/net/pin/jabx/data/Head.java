@@ -1,14 +1,12 @@
 package br.net.pin.jabx.data;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 import br.net.pin.jabx.mage.WizChars;
 import br.net.pin.jabx.mage.WizData;
 
-public class Head {
+public class Head implements Fixable {
   public String catalog;
   public String schema;
   public String name;

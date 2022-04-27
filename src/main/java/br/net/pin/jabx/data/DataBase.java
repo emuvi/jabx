@@ -27,7 +27,7 @@ public enum DataBase {
   FirebirdInner("org.firebirdsql.jdbc.FBDriver", "jdbc:firebirdsql:embedded:$path", 3050,
       new HelperFirebird()),
 
-  FirebirdClient("org.firebirdsql.jdbc.FBDriver", "jdbc:firebirdsql:$path/$port:$data",
+  FirebirdClient("org.firebirdsql.jdbc.FBDriver", "jdbc:firebirdsql:$path:$port/$data",
       3050, new HelperFirebird()),
 
   MySQLClient("com.mysql.jdbc.Driver", "jdbc:mysql://$path:$port/$data", 3306,
@@ -48,7 +48,7 @@ public enum DataBase {
     this.helper = auxiliar;
   }
 
-  public String getURLIdenty() {
+  public String getUrlIdenty() {
     var dollarAt = this.formation.indexOf("$");
     if (dollarAt == -1) {
       return this.formation;
@@ -58,10 +58,19 @@ public enum DataBase {
 
   public static DataBase fromURL(String jdbc) {
     for (DataBase data : DataBase.values()) {
-      if (jdbc.startsWith(data.getURLIdenty())) {
+      if (jdbc.startsWith(data.getUrlIdenty())) {
         return data;
       }
     }
     return null;
+  }
+
+  public static Helper getHelperFromURL(String jdbc) {
+    for (DataBase data : DataBase.values()) {
+      if (jdbc.startsWith(data.getUrlIdenty())) {
+        return data.helper;
+      }
+    }
+    return Helper.instance;
   }
 }

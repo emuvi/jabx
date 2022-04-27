@@ -11,7 +11,7 @@ import br.net.pin.jabx.mage.WizData;
 public abstract class Helper {
   public List<Head> getHeads(Connection link) throws Exception {
     var meta = link.getMetaData();
-    var set = meta.getTables(null, null, "%", new String[] {"TABLE"});
+    var set = meta.getTables(null, null, "%", new String[] { "TABLE" });
     var result = new ArrayList<Head>();
     while (set.next()) {
       result.add(new Head(set.getString(1), set.getString(2), set.getString(3)));
@@ -36,7 +36,7 @@ public abstract class Helper {
       if (i > 0) {
         builder.append(", ");
       }
-      builder.append(this.formatNature(table.fields.get(i)));
+      builder.append(this.formNature(table.fields.get(i)));
     }
     builder.append(")");
     connection.createStatement().execute(builder.toString());
@@ -56,7 +56,7 @@ public abstract class Helper {
     }
     builder.append(" FROM ");
     builder.append(select.table.getSchemaName());
-    builder.append(this.formatClauses(select.clauses));
+    builder.append(this.formClauses(select.clauses));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
     if (select.clauses != null && !select.clauses.isEmpty()) {
@@ -120,7 +120,7 @@ public abstract class Helper {
         builder.append("?");
       }
     }
-    builder.append(this.formatClauses(update.clauses));
+    builder.append(this.formClauses(update.clauses));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
     for (var valued : update.valueds) {
@@ -143,7 +143,7 @@ public abstract class Helper {
   public ResultSet delete(Connection link, Delete delete) throws Exception {
     var builder = new StringBuilder("DELETE FROM ");
     builder.append(delete.table.getSchemaName());
-    builder.append(this.formatClauses(delete.clauses));
+    builder.append(this.formClauses(delete.clauses));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
     if (delete.clauses != null && !delete.clauses.isEmpty()) {
@@ -157,7 +157,7 @@ public abstract class Helper {
     return prepared.executeQuery();
   }
 
-  public String formatNature(Field field) {
+  public String formNature(Field field) {
     var builder = new StringBuilder(field.name);
     switch (field.nature) {
       case BOOL:
@@ -250,7 +250,7 @@ public abstract class Helper {
     return builder.toString();
   }
 
-  public String formatClauses(List<Clause> clauses) {
+  public String formClauses(List<Clause> clauses) {
     if ((clauses == null) || clauses.isEmpty()) {
       return "";
     }
@@ -269,7 +269,7 @@ public abstract class Helper {
       if (clause.valued.data == null) {
         builder.append(" IS NULL ");
       } else {
-        builder.append(this.formatCondition(clause.likes));
+        builder.append(this.formCondition(clause.likes));
         builder.append(" ? ");
       }
       nextIsOr = clause.tie == Tie.OR;
@@ -277,7 +277,7 @@ public abstract class Helper {
     return builder.toString();
   }
 
-  public String formatCondition(Condition condition) {
+  public String formCondition(Condition condition) {
     switch (condition) {
       case EQUALS:
         return "=";
@@ -367,4 +367,7 @@ public abstract class Helper {
   public boolean isPrimaryKey(Exception error) {
     return error.getMessage().contains("unique constraint");
   }
+
+  public static Helper instance = new Helper() {
+  };
 }

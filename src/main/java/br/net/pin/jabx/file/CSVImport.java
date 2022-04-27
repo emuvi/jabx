@@ -5,7 +5,7 @@ import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Objects;
-import br.net.pin.jabx.data.DBLink;
+import br.net.pin.jabx.data.DataLink;
 import br.net.pin.jabx.data.Field;
 import br.net.pin.jabx.data.Head;
 import br.net.pin.jabx.data.Insert;
@@ -17,9 +17,9 @@ import br.net.pin.jabx.mage.WizFile;
 public class CSVImport extends Thread {
   private final Pace progress;
   private final File origin;
-  private final DBLink destiny;
+  private final DataLink destiny;
 
-  public CSVImport(File origin, DBLink destiny, Pace progress) {
+  public CSVImport(File origin, DataLink destiny, Pace progress) {
     super("ImportFromCSV");
     this.origin = origin;
     this.destiny = destiny;

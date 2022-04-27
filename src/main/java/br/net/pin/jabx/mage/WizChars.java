@@ -226,4 +226,26 @@ public class WizChars {
     inChars = inChars.replace("\\r", "\r");
     return inChars.replace("\\\\", "\\");
   }
+
+  public static String replaceEnvVars(String inChars) {
+    if (WizChars.isEmpty(inChars)) {
+      return inChars;
+    }
+    var result = inChars;
+    var envPos = result.indexOf("${env:");
+    while (envPos > -1) {
+      var envPosEnd = result.indexOf("}", envPos);
+      if (envPosEnd == -1) {
+        break;
+      }
+      var envName = result.substring(envPos + 6, envPosEnd);
+      var envValue = System.getenv(envName);
+      if (envValue == null) {
+        envValue = "";
+      }
+      result = result.substring(0, envPos) + envValue + result.substring(envPosEnd + 1);
+      envPos = result.indexOf("${env:", envPos + 1);
+    }
+    return result;
+  }
 }

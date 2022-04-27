@@ -2,7 +2,7 @@ package br.net.pin.jabx.data;
 
 import com.google.gson.Gson;
 
-public class Valued {
+public class Valued implements Fixable {
   public String name;
   public Nature type;
   public Object data;

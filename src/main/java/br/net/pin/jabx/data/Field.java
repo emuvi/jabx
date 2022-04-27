@@ -3,7 +3,7 @@ package br.net.pin.jabx.data;
 import br.net.pin.jabx.mage.WizBytes;
 import br.net.pin.jabx.mage.WizDate;
 
-public class Field {
+public class Field implements Fixable {
   public String name;
   public Nature nature;
   public Integer size;

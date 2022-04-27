@@ -3,7 +3,7 @@ package br.net.pin.jabx.data;
 import java.util.List;
 import com.google.gson.Gson;
 
-public class Update {
+public class Update implements Fixable {
   public Head table;
   public List<Valued> valueds;
   public List<Clause> clauses;

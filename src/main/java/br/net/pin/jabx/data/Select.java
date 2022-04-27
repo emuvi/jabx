@@ -3,7 +3,7 @@ package br.net.pin.jabx.data;
 import java.util.List;
 import com.google.gson.Gson;
 
-public class Select {
+public class Select implements Fixable {
   public Head table;
   public List<String> fields;
   public List<Clause> clauses;

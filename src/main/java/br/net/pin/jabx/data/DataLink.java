@@ -4,40 +4,41 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import com.google.gson.Gson;
 
-public class DBLink {
+public class DataLink implements Fixable {
   public String name;
   public DataBase base;
   public String path;
   public Integer port;
   public String data;
   public String user;
-  public Pass pass;
+  public String pass;
 
-  public DBLink() {}
+  public DataLink() {
+  }
 
-  public DBLink(String name) {
+  public DataLink(String name) {
     this.name = name;
   }
 
-  public DBLink(String name, DataBase base) {
+  public DataLink(String name, DataBase base) {
     this.name = name;
     this.base = base;
   }
 
-  public DBLink(String name, DataBase base, String path) {
+  public DataLink(String name, DataBase base, String path) {
     this.name = name;
     this.base = base;
     this.path = path;
   }
 
-  public DBLink(String name, DataBase base, String path, String data) {
+  public DataLink(String name, DataBase base, String path, String data) {
     this.name = name;
     this.base = base;
     this.path = path;
     this.data = data;
   }
 
-  public DBLink(String name, DataBase base, String path, Integer port, String data) {
+  public DataLink(String name, DataBase base, String path, Integer port, String data) {
     this.name = name;
     this.base = base;
     this.path = path;
@@ -45,8 +46,8 @@ public class DBLink {
     this.data = data;
   }
 
-  public DBLink(String name, DataBase base, String path, String data, String user,
-      Pass pass) {
+  public DataLink(String name, DataBase base, String path, String data, String user,
+      String pass) {
     this.name = name;
     this.base = base;
     this.path = path;
@@ -55,29 +56,29 @@ public class DBLink {
     this.pass = pass;
   }
 
-  public DBLink(DataBase base) {
+  public DataLink(DataBase base) {
     this.base = base;
   }
 
-  public DBLink(DataBase base, String path) {
+  public DataLink(DataBase base, String path) {
     this.base = base;
     this.path = path;
   }
 
-  public DBLink(DataBase base, String path, String data) {
+  public DataLink(DataBase base, String path, String data) {
     this.base = base;
     this.path = path;
     this.data = data;
   }
 
-  public DBLink(DataBase base, String path, Integer port, String data) {
+  public DataLink(DataBase base, String path, Integer port, String data) {
     this.base = base;
     this.path = path;
     this.port = port;
     this.data = data;
   }
 
-  public DBLink(DataBase base, String path, String data, String user, Pass pass) {
+  public DataLink(DataBase base, String path, String data, String user, String pass) {
     this.base = base;
     this.path = path;
     this.data = data;
@@ -85,8 +86,8 @@ public class DBLink {
     this.pass = pass;
   }
 
-  public DBLink(String name, DataBase base, String path, Integer port, String data,
-      String user, Pass pass) {
+  public DataLink(String name, DataBase base, String path, Integer port, String data,
+      String user, String pass) {
     this.name = name;
     this.base = base;
     this.path = path;
@@ -96,7 +97,7 @@ public class DBLink {
     this.pass = pass;
   }
 
-  public String getFormed() {
+  public String formUrl() {
     var result = this.base.formation;
     if (result.contains("$path") && this.path != null) {
       result = result.replace("$path", this.path);
@@ -117,10 +118,9 @@ public class DBLink {
   public Connection connect() throws Exception {
     Class.forName(this.base.clazz);
     if ((this.user != null && !this.user.isEmpty() && this.pass != null)) {
-      return DriverManager.getConnection(this.getFormed(), this.user, this.pass
-          .getPass());
+      return DriverManager.getConnection(this.formUrl(), this.user, this.pass);
     }
-    return DriverManager.getConnection(this.getFormed());
+    return DriverManager.getConnection(this.formUrl());
   }
 
   private transient Connection linked = null;
@@ -140,7 +140,7 @@ public class DBLink {
     return new Gson().toJson(this);
   }
 
-  public static DBLink fromString(String json) {
-    return new Gson().fromJson(json, DBLink.class);
+  public static DataLink fromString(String json) {
+    return new Gson().fromJson(json, DataLink.class);
   }
 }

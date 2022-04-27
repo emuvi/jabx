@@ -2,7 +2,7 @@ package br.net.pin.jabx.data;
 
 public class HelperPostgres extends Helper {
   @Override
-  public String formatNature(Field field) {
+  public String formNature(Field field) {
     var builder = new StringBuilder(field.name);
     switch (field.nature) {
       case BOOL:

@@ -13,7 +13,7 @@ public class HelperTest {
 
   @Test
   void testCreate() throws Exception {
-    var link = new DBLink(DataBase.SQLiteMemory);
+    var link = new DataLink(DataBase.SQLiteMemory);
     var conn = link.connect();
     link.base.helper.create(conn,
         new Table(new Head("test"),
@@ -23,7 +23,7 @@ public class HelperTest {
 
   @Test
   void testInsert() throws Exception {
-    var link = new DBLink(DataBase.SQLiteMemory);
+    var link = new DataLink(DataBase.SQLiteMemory);
     var conn = link.connect();
     link.base.helper.create(conn,
         new Table(new Head("test"),
@@ -38,7 +38,7 @@ public class HelperTest {
 
   @Test
   void testSelect() throws Exception {
-    var link = new DBLink(DataBase.SQLiteMemory);
+    var link = new DataLink(DataBase.SQLiteMemory);
     var conn = link.connect();
     link.base.helper.create(conn,
         new Table(new Head("test"),
@@ -57,7 +57,7 @@ public class HelperTest {
 
   @Test
   void testUpdate() throws Exception {
-    var link = new DBLink(DataBase.SQLiteMemory);
+    var link = new DataLink(DataBase.SQLiteMemory);
     var conn = link.connect();
     link.base.helper.create(conn,
         new Table(new Head("test"),
