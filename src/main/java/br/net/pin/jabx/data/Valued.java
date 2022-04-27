@@ -7,7 +7,11 @@ public class Valued {
   public Nature type;
   public Object data;
 
-  public Valued() {
+  public Valued() {}
+
+  public Valued(String name, Object data) {
+    this.name = name;
+    this.data = data;
   }
 
   public Valued(String name, Nature type, Object data) {

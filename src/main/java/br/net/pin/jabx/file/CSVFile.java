@@ -26,11 +26,11 @@ public class CSVFile implements Closeable {
     this.file = file;
     this.mode = mode;
     if (mode == Mode.READ) {
-      reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
-      writer = null;
+      this.reader = new BufferedReader(new FileReader(file, StandardCharsets.UTF_8));
+      this.writer = null;
     } else {
-      reader = null;
-      writer = new PrintWriter(new FileOutputStream(file, mode == Mode.APPEND), true,
+      this.reader = null;
+      this.writer = new PrintWriter(new FileOutputStream(file, mode == Mode.APPEND), true,
           StandardCharsets.UTF_8);
     }
   }
@@ -44,14 +44,14 @@ public class CSVFile implements Closeable {
   }
 
   public String[] readLine() throws Exception {
-    final var line = reader.readLine();
+    final var line = this.reader.readLine();
     if (line == null) {
       return null;
     }
     var result = new LinkedList<>();
     var openQuotes = false;
     var builder = new StringBuilder();
-    for (int i = 0; i < line.length(); i++) {
+    for (var i = 0; i < line.length(); i++) {
       var actual = line.charAt(i);
       var next = i < line.length() - 1 ? line.charAt(i + 1) : ' ';
       if (openQuotes) {
@@ -65,15 +65,13 @@ public class CSVFile implements Closeable {
         } else {
           builder.append(actual);
         }
+      } else if (actual == '"') {
+        openQuotes = true;
+      } else if (actual == ',' || actual == ';') {
+        result.add(WizChars.remakeControlFlow(builder.toString()));
+        builder = new StringBuilder();
       } else {
-        if (actual == '"') {
-          openQuotes = true;
-        } else if (actual == ',' || actual == ';') {
-          result.add(WizChars.remakeControlFlow(builder.toString()));
-          builder = new StringBuilder();
-        } else {
-          builder.append(actual);
-        }
+        builder.append(actual);
       }
     }
     result.add(WizChars.remakeControlFlow(builder.toString()));
@@ -82,29 +80,29 @@ public class CSVFile implements Closeable {
 
   public void writeLine(String... columns) {
     if (columns != null) {
-      for (int i = 0; i < columns.length; i++) {
+      for (var i = 0; i < columns.length; i++) {
         var column = WizChars.replaceControlFlow(columns[i]);
         if (WizChars.contains(column, '"', ' ', ',', ';')) {
           column = '"' + column.replace("\"", "\"\"") + '"';
         }
         if (i > 0) {
-          writer.write(",");
+          this.writer.write(",");
         }
         if (WizChars.isNotEmpty(column)) {
-          writer.write(column);
+          this.writer.write(column);
         }
       }
     }
-    writer.write(System.lineSeparator());
+    this.writer.write(System.lineSeparator());
   }
 
   @Override
   public void close() throws IOException {
-    if (reader != null) {
-      reader.close();
+    if (this.reader != null) {
+      this.reader.close();
     }
-    if (writer != null) {
-      writer.close();
+    if (this.writer != null) {
+      this.writer.close();
     }
   }
 

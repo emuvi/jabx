@@ -2,10 +2,14 @@ package br.net.pin.jabx.data;
 
 public enum DataBase {
 
-  HSQLDBMemory("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:$path", 9000,
-      new HelperHSQLDB()),
+  SQLiteLocal("org.sqlite.JDBC", "jdbc:sqlite:$path", null, new HelperSQLite()),
 
-  HSQLDBLocal("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:$path;hsqldb.lock_file=true", 9000,
+  SQLiteMemory("org.sqlite.JDBC", "jdbc:sqlite::memory:", null, new HelperSQLite()),
+
+  HSQLDBLocal("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:$path;hsqldb.lock_file=true",
+      9000, new HelperHSQLDB()),
+
+  HSQLDBMemory("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:$data", 9000,
       new HelperHSQLDB()),
 
   HSQLDBClient("org.hsqldb.jdbcDriver", "jdbc:hsqldb:hsql://$path:$port/$data", 9000,
@@ -17,25 +21,25 @@ public enum DataBase {
   DerbyClient("org.apache.derby.jdbc.ClientDriver",
       "jdbc:derby://$path:$port/$data;create=true", 1527, new HelperDerby()),
 
-  FirebirdInner("org.firebirdsql.jdbc.FBDriver", "jdbc:firebirdsql:embedded:$path", 3050,
+  FirebirdLocal("org.firebirdsql.jdbc.FBDriver", "jdbc:firebirdsql:local:$path", 3050,
       new HelperFirebird()),
 
-  FirebirdLocal("org.firebirdsql.jdbc.FBDriver", "jdbc:firebirdsql:local:$path", 3050,
+  FirebirdInner("org.firebirdsql.jdbc.FBDriver", "jdbc:firebirdsql:embedded:$path", 3050,
       new HelperFirebird()),
 
   FirebirdClient("org.firebirdsql.jdbc.FBDriver", "jdbc:firebirdsql:$path/$port:$data",
       3050, new HelperFirebird()),
 
-  MySQL("com.mysql.jdbc.Driver", "jdbc:mysql://$path:$port/$data", 3306,
+  MySQLClient("com.mysql.jdbc.Driver", "jdbc:mysql://$path:$port/$data", 3306,
       new HelperMySQL()),
 
-  Postgres("org.postgresql.Driver", "jdbc:postgresql://$path:$port/$data", 5432,
+  PostgresClient("org.postgresql.Driver", "jdbc:postgresql://$path:$port/$data", 5432,
       new HelperPostgres());
 
-  private final String clazz;
-  private final String formation;
-  private final Integer defaultPort;
-  private final Helper helper;
+  public final String clazz;
+  public final String formation;
+  public final Integer defaultPort;
+  public final Helper helper;
 
   private DataBase(String clazz, String formation, Integer defaultPort, Helper auxiliar) {
     this.clazz = clazz;
@@ -44,29 +48,12 @@ public enum DataBase {
     this.helper = auxiliar;
   }
 
-  public String getClazz() {
-    return this.clazz;
-  }
-
-  public String getFormation() {
-    return this.formation;
-  }
-
-  public Integer getDefaultPort() {
-    return defaultPort;
-  }
-
-  public Helper getHelper() {
-    return this.helper;
-  }
-
   public String getURLIdenty() {
     var dollarAt = this.formation.indexOf("$");
     if (dollarAt == -1) {
       return this.formation;
-    } else {
-      return this.formation.substring(0, dollarAt);
     }
+    return this.formation.substring(0, dollarAt);
   }
 
   public static DataBase fromURL(String jdbc) {

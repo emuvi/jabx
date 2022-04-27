@@ -3,7 +3,7 @@ package br.net.pin.jabx.data;
 import br.net.pin.jabx.mage.WizBytes;
 import br.net.pin.jabx.mage.WizDate;
 
-public class TableField {
+public class Field {
   public String name;
   public Nature nature;
   public Integer size;
@@ -11,10 +11,54 @@ public class TableField {
   public Boolean notNull;
   public Boolean key;
 
-  public TableField() {
+  public Field() {}
+
+  public Field(String name) {
+    this.name = name;
   }
 
-  public TableField(String name, Nature nature, Integer size, Integer precision, Boolean notNull, Boolean key) {
+  public Field(String name, Nature nature) {
+    this.name = name;
+    this.nature = nature;
+  }
+
+  public Field(String name, Nature nature, Boolean notNull) {
+    this.name = name;
+    this.nature = nature;
+    this.notNull = notNull;
+  }
+
+  public Field(String name, Nature nature, Integer size) {
+    this.name = name;
+    this.nature = nature;
+    this.size = size;
+  }
+
+  public Field(String name, Nature nature, Integer size, Boolean notNull) {
+    this.name = name;
+    this.nature = nature;
+    this.size = size;
+    this.notNull = notNull;
+  }
+
+  public Field(String name, Nature nature, Integer size, Integer precision) {
+    this.name = name;
+    this.nature = nature;
+    this.size = size;
+    this.precision = precision;
+  }
+
+  public Field(String name, Nature nature, Integer size, Integer precision,
+      Boolean notNull) {
+    this.name = name;
+    this.nature = nature;
+    this.size = size;
+    this.precision = precision;
+    this.notNull = notNull;
+  }
+
+  public Field(String name, Nature nature, Integer size, Integer precision,
+      Boolean notNull, Boolean key) {
     this.name = name;
     this.nature = nature;
     this.size = size;
@@ -27,7 +71,7 @@ public class TableField {
     if (formatted == null || formatted.isEmpty()) {
       return null;
     }
-    switch (nature) {
+    switch (this.nature) {
       case BOOL:
       case BIT:
         return Boolean.parseBoolean(formatted);
@@ -67,7 +111,7 @@ public class TableField {
     if (value == null) {
       return "";
     }
-    switch (nature) {
+    switch (this.nature) {
       case BOOL:
       case BIT:
       case BYTE:
@@ -96,5 +140,5 @@ public class TableField {
     }
   }
 
-  
+
 }

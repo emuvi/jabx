@@ -8,8 +8,7 @@ public class Clause {
   public Valued valued;
   public Tie tie;
 
-  public Clause() {
-  }
+  public Clause() {}
 
   public Clause(Same same, Condition likes, Valued valued, Tie tie) {
     this.same = same;
@@ -17,7 +16,7 @@ public class Clause {
     this.valued = valued;
     this.tie = tie;
   }
-  
+
   @Override
   public String toString() {
     return new Gson().toJson(this);

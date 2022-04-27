@@ -13,18 +13,19 @@ public class WizBytes {
   public static byte[] get(Object fromValue) throws Exception {
     if (fromValue instanceof byte[]) {
       return (byte[]) fromValue;
-    } else if (fromValue instanceof Byte[]) {
+    }
+    if (fromValue instanceof Byte[]) {
       return (byte[]) fromValue;
     } else if (fromValue instanceof Serializable) {
-      ByteArrayOutputStream bos = new ByteArrayOutputStream();
-      ObjectOutputStream oos = new ObjectOutputStream(bos);
-      oos.writeObject(((Serializable) fromValue));
+      var bos = new ByteArrayOutputStream();
+      var oos = new ObjectOutputStream(bos);
+      oos.writeObject((fromValue));
       oos.flush();
       return bos.toByteArray();
     }
     throw new Exception("Could not convert this value to a bytes value.");
   }
-  
+
   public static String encodeToBase64(byte[] bytes) {
     return Base64.getEncoder().encodeToString(bytes);
   }
@@ -34,9 +35,9 @@ public class WizBytes {
   }
 
   public static String encodeToHex(byte[] bytes) {
-    StringBuilder hexString = new StringBuilder(2 * bytes.length);
-    for (int i = 0; i < bytes.length; i++) {
-      String hex = Integer.toHexString(0xff & bytes[i]);
+    var hexString = new StringBuilder(2 * bytes.length);
+    for (byte element : bytes) {
+      var hex = Integer.toHexString(0xff & element);
       if (hex.length() == 1) {
         hexString.append('0');
       }
@@ -46,11 +47,11 @@ public class WizBytes {
   }
 
   public static String checkSHA256(File file) throws Exception {
-    return checkSHA256(Files.readAllBytes(file.toPath()));
+    return WizBytes.checkSHA256(Files.readAllBytes(file.toPath()));
   }
 
   public static String checkSHA256(byte[] bytes) throws Exception {
-    return encodeToHex(MessageDigest.getInstance("SHA-256").digest(bytes));
+    return WizBytes.encodeToHex(MessageDigest.getInstance("SHA-256").digest(bytes));
   }
-  
+
 }

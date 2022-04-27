@@ -9,7 +9,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class WizFile {
 
   public static String clean(String path) {
-    return getAbsolute(fixSeparators(path));
+    return WizFile.getAbsolute(WizFile.fixSeparators(path));
   }
 
   public static String getAbsolute(String path) {
@@ -29,10 +29,11 @@ public class WizFile {
           path = path.substring(upperPrefix.length());
         }
       }
-      return sum(workingDir.getAbsolutePath(), path);
-    } else if (path.startsWith(homePrefix)) {
+      return WizFile.sum(workingDir.getAbsolutePath(), path);
+    }
+    if (path.startsWith(homePrefix)) {
       var homeDir = new File(System.getProperty("user.home"));
-      return sum(homeDir.getAbsolutePath(), path);
+      return WizFile.sum(homeDir.getAbsolutePath(), path);
     }
     return path;
   }
@@ -41,33 +42,32 @@ public class WizFile {
     if (WizChars.isEmpty(path)) {
       return path;
     }
-    if (path.contains("\\") && File.separator.equals("/")) {
+    if (path.contains("\\") && "/".equals(File.separator)) {
       path = path.replaceAll("\\", "/");
-    } else if (path.contains("/") && File.separator.equals("\\")) {
+    } else if (path.contains("/") && "\\".equals(File.separator)) {
       path = path.replaceAll("/", "\\");
     }
     return path;
   }
 
   public static String sum(String path, String child) {
-    if (WizChars.isNotEmpty(path) && WizChars.isNotEmpty(child)) {
-      if (path.endsWith(File.separator) && child.startsWith(File.separator)) {
-        return path + child.substring(File.separator.length());
-      } else if (path.endsWith(File.separator) || child.startsWith(File.separator)) {
-        return path + child;
-      } else {
-        return path + File.separator + child;
-      }
-    } else {
+    if (!WizChars.isNotEmpty(path) || !WizChars.isNotEmpty(child)) {
       return WizChars.firstNonEmpty(path, child);
+    }
+    if (path.endsWith(File.separator) && child.startsWith(File.separator)) {
+      return path + child.substring(File.separator.length());
+    } else if (path.endsWith(File.separator) || child.startsWith(File.separator)) {
+      return path + child;
+    } else {
+      return path + File.separator + child;
     }
   }
 
   public static String sum(String path, String... children) {
-    String result = path;
+    var result = path;
     if (children != null) {
       for (String filho : children) {
-        result = sum(result, filho);
+        result = WizFile.sum(result, filho);
       }
     }
     return result;
@@ -86,7 +86,7 @@ public class WizFile {
   public static File getParent(File path, String withName) {
     File result = null;
     if (path != null) {
-      File actual = path.getParentFile();
+      var actual = path.getParentFile();
       while (!withName.equals(actual.getName())) {
         actual = actual.getParentFile();
         if (actual == null) {
@@ -101,16 +101,15 @@ public class WizFile {
   public static String getParent(String path) {
     if (path.contains(File.separator)) {
       return path.substring(0, path.lastIndexOf(File.separator));
-    } else {
-      return path;
     }
+    return path;
   }
 
   public static File getRoot(String withName, File fromPath) {
     if (fromPath == null) {
       return null;
     }
-    File result = fromPath.getParentFile();
+    var result = fromPath.getParentFile();
     while (result != null && !Objects.equals(withName, result.getName())) {
       result = result.getParentFile();
     }
@@ -121,37 +120,34 @@ public class WizFile {
     if (path == null) {
       return null;
     }
-    final int sep = path.lastIndexOf(File.separator);
+    final var sep = path.lastIndexOf(File.separator);
     if (sep == -1) {
       return path;
-    } else {
-      return path.substring(sep + 1);
     }
+    return path.substring(sep + 1);
   }
 
   public static String getBaseName(String path) {
     if (path == null) {
       return null;
     }
-    path = getName(path);
-    final int dot = path.lastIndexOf(".");
+    path = WizFile.getName(path);
+    final var dot = path.lastIndexOf(".");
     if (dot > -1) {
       return path.substring(0, dot);
-    } else {
-      return path;
     }
+    return path;
   }
 
   public static String getExtension(String path) {
     if (path == null) {
       return null;
     }
-    final int dot = path.lastIndexOf(".");
+    final var dot = path.lastIndexOf(".");
     if (dot > -1) {
       return path.substring(dot);
-    } else {
-      return "";
     }
+    return "";
   }
 
   public static String addOnBaseName(String path, String chars) {
@@ -164,33 +160,30 @@ public class WizFile {
     var dotIndex = path.lastIndexOf(".");
     if (dotIndex > -1) {
       return path.substring(0, dotIndex) + chars + path.substring(dotIndex);
-    } else {
-      return path + chars;
     }
+    return path + chars;
   }
 
   public static File addOnBaseName(File file, String chars) {
-    return new File(addOnBaseName(file.getAbsolutePath(), chars));
+    return new File(WizFile.addOnBaseName(file.getAbsolutePath(), chars));
   }
 
   public static File notOverride(File path) {
-    if (path == null) {
-      return path;
-    }
-    if (!path.exists()) {
+    if ((path == null) || !path.exists()) {
       return path;
     }
     File result = null;
-    int attempt = 2;
+    var attempt = 2;
     do {
-      result = new File(addOnBaseName(path.getAbsolutePath(), " (" + attempt + ")"));
+      result = new File(WizFile.addOnBaseName(path.getAbsolutePath(), " (" + attempt
+          + ")"));
       attempt++;
     } while (result.exists());
     return result;
   }
 
   public static JFileChooser chooser(String description, String... extensions) {
-    JFileChooser chooser = new JFileChooser();
+    var chooser = new JFileChooser();
     chooser.setDialogTitle("Select");
     chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
     chooser.setAcceptAllFileFilterUsed(extensions == null);
@@ -200,21 +193,21 @@ public class WizFile {
   }
 
   public static File open() {
-    return open(null);
+    return WizFile.open(null);
   }
 
   public static File open(File selected) {
-    return open(selected, null);
+    return WizFile.open(selected, null);
   }
 
   public static File open(String description, String... extensions) {
-    return open(null, description, extensions);
+    return WizFile.open(null, description, extensions);
   }
 
   public static File open(File selected, String description, String... extensions) {
     File result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Select File or Directory");
       chooser.setMultiSelectionEnabled(false);
       chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -230,28 +223,29 @@ public class WizFile {
         result = chooser.getSelectedFile();
       }
     } else {
-      result = selectFileTerminal(FileTerminalAction.OPEN, FileTerminalNature.BOTH,
+      result = WizFile.selectFileTerminal(FileTerminalAction.OPEN,
+          FileTerminalNature.BOTH,
           selected, description, extensions);
     }
     return result;
   }
 
   public static File openFile() {
-    return openFile(null);
+    return WizFile.openFile(null);
   }
 
   public static File openFile(File selected) {
-    return openFile(selected, null);
+    return WizFile.openFile(selected, null);
   }
 
   public static File openFile(String description, String... extensions) {
-    return openFile(null, description, extensions);
+    return WizFile.openFile(null, description, extensions);
   }
 
   public static File openFile(File selected, String description, String... extensions) {
     File result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Select File");
       chooser.setMultiSelectionEnabled(false);
       chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -267,28 +261,29 @@ public class WizFile {
         result = chooser.getSelectedFile();
       }
     } else {
-      result = selectFileTerminal(FileTerminalAction.OPEN, FileTerminalNature.FILE,
+      result = WizFile.selectFileTerminal(FileTerminalAction.OPEN,
+          FileTerminalNature.FILE,
           selected, description, extensions);
     }
     return result;
   }
 
   public static File openDir() {
-    return openDir(null);
+    return WizFile.openDir(null);
   }
 
   public static File openDir(File selected) {
-    return openDir(selected, null);
+    return WizFile.openDir(selected, null);
   }
 
   public static File openDir(String description, String... extensions) {
-    return openDir(null, description, extensions);
+    return WizFile.openDir(null, description, extensions);
   }
 
   public static File openDir(File selected, String description, String... extensions) {
     File result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Select Directory");
       chooser.setMultiSelectionEnabled(false);
       chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -304,29 +299,30 @@ public class WizFile {
         result = chooser.getSelectedFile();
       }
     } else {
-      result = selectFileTerminal(FileTerminalAction.OPEN, FileTerminalNature.DIRECTORY,
+      result = WizFile.selectFileTerminal(FileTerminalAction.OPEN,
+          FileTerminalNature.DIRECTORY,
           selected, description, extensions);
     }
     return result;
   }
 
   public static File[] openMany() {
-    return openMany(null);
+    return WizFile.openMany(null);
   }
 
   public static File[] openMany(File[] selected) {
-    return openMany(selected, null);
+    return WizFile.openMany(selected, null);
   }
 
   public static File[] openMany(String description, String... extensions) {
-    return openMany(null, description, extensions);
+    return WizFile.openMany(null, description, extensions);
   }
 
   public static File[] openMany(File[] selected, String description,
       String... extensions) {
     File[] result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Select Many Files or Directories");
       chooser.setMultiSelectionEnabled(true);
       chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
@@ -342,29 +338,29 @@ public class WizFile {
         result = chooser.getSelectedFiles();
       }
     } else {
-      result = selectFileTerminalMany(true, FileTerminalAction.OPEN,
+      result = WizFile.selectFileTerminalMany(true, FileTerminalAction.OPEN,
           FileTerminalNature.BOTH, selected, description, extensions);
     }
     return result;
   }
 
   public static File[] openFileMany() {
-    return openFileMany(null);
+    return WizFile.openFileMany(null);
   }
 
   public static File[] openFileMany(File[] selected) {
-    return openFileMany(selected, null);
+    return WizFile.openFileMany(selected, null);
   }
 
   public static File[] openFileMany(String description, String... extensions) {
-    return openFileMany(null, description, extensions);
+    return WizFile.openFileMany(null, description, extensions);
   }
 
   public static File[] openFileMany(File[] selected, String description,
       String... extensions) {
     File[] result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Select Many Files");
       chooser.setMultiSelectionEnabled(true);
       chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
@@ -380,29 +376,29 @@ public class WizFile {
         result = chooser.getSelectedFiles();
       }
     } else {
-      result = selectFileTerminalMany(true, FileTerminalAction.OPEN,
+      result = WizFile.selectFileTerminalMany(true, FileTerminalAction.OPEN,
           FileTerminalNature.FILE, selected, description, extensions);
     }
     return result;
   }
 
   public static File[] openDirMany() {
-    return openDirMany(null);
+    return WizFile.openDirMany(null);
   }
 
   public static File[] openDirMany(File[] selected) {
-    return openDirMany(selected, null);
+    return WizFile.openDirMany(selected, null);
   }
 
   public static File[] openDirMany(String description, String... extensions) {
-    return openDirMany(null, description, extensions);
+    return WizFile.openDirMany(null, description, extensions);
   }
 
   public static File[] openDirMany(File[] selected, String description,
       String... extensions) {
     File[] result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Select Many Directories");
       chooser.setMultiSelectionEnabled(true);
       chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -418,28 +414,28 @@ public class WizFile {
         result = chooser.getSelectedFiles();
       }
     } else {
-      result = selectFileTerminalMany(true, FileTerminalAction.OPEN,
+      result = WizFile.selectFileTerminalMany(true, FileTerminalAction.OPEN,
           FileTerminalNature.DIRECTORY, selected, description, extensions);
     }
     return result;
   }
 
   public static File save() {
-    return save(null);
+    return WizFile.save(null);
   }
 
   public static File save(File selected) {
-    return save(selected, null);
+    return WizFile.save(selected, null);
   }
 
   public static File save(String description, String... extensions) {
-    return save(null, description, extensions);
+    return WizFile.save(null, description, extensions);
   }
 
   public static File save(File selected, String description, String... extensions) {
     File result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Save File or Directory");
       chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
       chooser.setAcceptAllFileFilterUsed(extensions == null);
@@ -452,7 +448,7 @@ public class WizFile {
       }
       if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
         result = chooser.getSelectedFile();
-        String ext = getExtension(result.getAbsolutePath());
+        var ext = WizFile.getExtension(result.getAbsolutePath());
         if (extensions != null) {
           if (!WizArray.has(ext, extensions)) {
             result = new File(result.getAbsolutePath() + "." + extensions[0]);
@@ -460,28 +456,29 @@ public class WizFile {
         }
       }
     } else {
-      result = selectFileTerminal(FileTerminalAction.SAVE, FileTerminalNature.BOTH,
+      result = WizFile.selectFileTerminal(FileTerminalAction.SAVE,
+          FileTerminalNature.BOTH,
           selected, description, extensions);
     }
     return result;
   }
 
   public static File saveFile() {
-    return saveFile(null);
+    return WizFile.saveFile(null);
   }
 
   public static File saveFile(File selected) {
-    return saveFile(selected, null);
+    return WizFile.saveFile(selected, null);
   }
 
   public static File saveFile(String description, String... extensions) {
-    return saveFile(null, description, extensions);
+    return WizFile.saveFile(null, description, extensions);
   }
 
   public static File saveFile(File selected, String description, String... extensions) {
     File result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Save File");
       chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
       chooser.setAcceptAllFileFilterUsed(extensions == null);
@@ -496,9 +493,9 @@ public class WizFile {
         result = chooser.getSelectedFile();
         if (extensions != null) {
           if (extensions.length > 0) {
-            boolean mustInclude = true;
+            var mustInclude = true;
             if (result.getName().contains(".")) {
-              String ext = getExtension(result.getName());
+              var ext = WizFile.getExtension(result.getName());
               if (WizArray.has(ext, extensions)) {
                 mustInclude = false;
               }
@@ -510,28 +507,29 @@ public class WizFile {
         }
       }
     } else {
-      result = selectFileTerminal(FileTerminalAction.SAVE, FileTerminalNature.FILE,
+      result = WizFile.selectFileTerminal(FileTerminalAction.SAVE,
+          FileTerminalNature.FILE,
           selected, description, extensions);
     }
     return result;
   }
 
   public static File saveDir() {
-    return saveDir(null);
+    return WizFile.saveDir(null);
   }
 
   public static File saveDir(File selected) {
-    return saveDir(selected, null);
+    return WizFile.saveDir(selected, null);
   }
 
   public static File saveDir(String description, String... extensions) {
-    return saveDir(null, description, extensions);
+    return WizFile.saveDir(null, description, extensions);
   }
 
   public static File saveDir(File selected, String description, String... extensions) {
     File result = null;
     if (WizDesk.isStarted()) {
-      JFileChooser chooser = new JFileChooser();
+      var chooser = new JFileChooser();
       chooser.setDialogTitle("Save Directory");
       chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
       chooser.setAcceptAllFileFilterUsed(extensions == null);
@@ -544,7 +542,7 @@ public class WizFile {
       }
       if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
         result = chooser.getSelectedFile();
-        String ext = getExtension(result.getAbsolutePath());
+        var ext = WizFile.getExtension(result.getAbsolutePath());
         if (extensions != null) {
           if (!WizArray.has(ext, extensions)) {
             result = new File(result.getAbsolutePath() + "." + extensions[0]);
@@ -552,7 +550,8 @@ public class WizFile {
         }
       }
     } else {
-      result = selectFileTerminal(FileTerminalAction.SAVE, FileTerminalNature.DIRECTORY,
+      result = WizFile.selectFileTerminal(FileTerminalAction.SAVE,
+          FileTerminalNature.DIRECTORY,
           selected, description, extensions);
     }
     return result;
@@ -569,7 +568,7 @@ public class WizFile {
   private static File selectFileTerminal(FileTerminalAction action,
       FileTerminalNature nature, File selected, String description,
       String... extensions) {
-    return selectFileTerminalMany(false, action, nature, new File[] {selected},
+    return WizFile.selectFileTerminalMany(false, action, nature, new File[] {selected},
         description, extensions)[0];
   }
 

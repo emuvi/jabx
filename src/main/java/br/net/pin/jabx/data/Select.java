@@ -1,27 +1,26 @@
 package br.net.pin.jabx.data;
 
 import java.util.List;
-
 import com.google.gson.Gson;
 
 public class Select {
+  public Head table;
   public List<String> fields;
-  public TableHead table;
   public List<Clause> clauses;
   public List<String> orders;
   public Integer offset;
   public Integer limit;
 
-  public Select() {
-  }
+  public Select() {}
 
-  public Select(TableHead table) {
+  public Select(Head table) {
     this.table = table;
   }
 
-  public Select(List<String> fields, TableHead table, List<Clause> clauses, List<String> orders, Integer offset, Integer limit) {
+  public Select(Head table, List<String> fields, List<Clause> clauses,
+      List<String> orders, Integer offset, Integer limit) {
+    this.table = table;
     this.fields = fields;
-    this.table = table;
     this.clauses = clauses;
     this.orders = orders;
     this.offset = offset;
@@ -30,7 +29,7 @@ public class Select {
 
   @Override
   public String toString() {
-      return new Gson().toJson(this);
+    return new Gson().toJson(this);
   }
 
   public static Table fromString(String json) {

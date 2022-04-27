@@ -10,105 +10,108 @@ import java.util.concurrent.Future;
 public class WizLang {
 
   public static Boolean isWin() {
-    String OS = System.getProperty("os.name").toLowerCase();
+    var OS = System.getProperty("os.name").toLowerCase();
     return (OS.contains("win"));
-}
+  }
 
-public static Boolean isNix() {
-    String OS = System.getProperty("os.name").toLowerCase();
+  public static Boolean isNix() {
+    var OS = System.getProperty("os.name").toLowerCase();
     return (OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0);
-}
+  }
 
-public static Boolean isMac() {
-    String OS = System.getProperty("os.name").toLowerCase();
+  public static Boolean isMac() {
+    var OS = System.getProperty("os.name").toLowerCase();
     return (OS.contains("mac"));
-}
+  }
 
-public static Boolean isSol() {
-    String OS = System.getProperty("os.name").toLowerCase();
+  public static Boolean isSol() {
+    var OS = System.getProperty("os.name").toLowerCase();
     return (OS.contains("sunos"));
-}
-
-public static Class<?> getPrimitive(Class<?> ofClazz) {
-  if (ofClazz == null) {
-      return null;
   }
-  if (ofClazz.equals(Boolean.class)) {
+
+  public static Class<?> getPrimitive(Class<?> ofClazz) {
+    if (ofClazz == null) {
+      return null;
+    }
+    if (ofClazz.equals(Boolean.class)) {
       return boolean.class;
-  } else if (ofClazz.equals(Byte.class)) {
+    }
+    if (ofClazz.equals(Byte.class)) {
       return byte.class;
-  } else if (ofClazz.equals(Character.class)) {
+    } else if (ofClazz.equals(Character.class)) {
       return char.class;
-  } else if (ofClazz.equals(Double.class)) {
+    } else if (ofClazz.equals(Double.class)) {
       return double.class;
-  } else if (ofClazz.equals(Float.class)) {
+    } else if (ofClazz.equals(Float.class)) {
       return float.class;
-  } else if (ofClazz.equals(Integer.class)) {
+    } else if (ofClazz.equals(Integer.class)) {
       return int.class;
-  } else if (ofClazz.equals(Long.class)) {
+    } else if (ofClazz.equals(Long.class)) {
       return long.class;
-  } else if (ofClazz.equals(Short.class)) {
+    } else if (ofClazz.equals(Short.class)) {
       return short.class;
-  } else if (ofClazz.equals(Void.class)) {
+    } else if (ofClazz.equals(Void.class)) {
       return void.class;
-  } else {
+    } else {
       return ofClazz;
+    }
   }
-}
 
-public static Class<?> getFromPrimitive(Class<?> clazz) {
-  if (clazz == null) {
+  public static Class<?> getFromPrimitive(Class<?> clazz) {
+    if (clazz == null) {
       return null;
-  }
-  if (clazz.equals(boolean.class)) {
+    }
+    if (clazz.equals(boolean.class)) {
       return Boolean.class;
-  } else if (clazz.equals(byte.class)) {
+    }
+    if (clazz.equals(byte.class)) {
       return Byte.class;
-  } else if (clazz.equals(char.class)) {
+    } else if (clazz.equals(char.class)) {
       return Character.class;
-  } else if (clazz.equals(double.class)) {
+    } else if (clazz.equals(double.class)) {
       return Double.class;
-  } else if (clazz.equals(float.class)) {
+    } else if (clazz.equals(float.class)) {
       return Float.class;
-  } else if (clazz.equals(int.class)) {
+    } else if (clazz.equals(int.class)) {
       return Integer.class;
-  } else if (clazz.equals(long.class)) {
+    } else if (clazz.equals(long.class)) {
       return Long.class;
-  } else if (clazz.equals(short.class)) {
+    } else if (clazz.equals(short.class)) {
       return Short.class;
-  } else if (clazz.equals(void.class)) {
+    } else if (clazz.equals(void.class)) {
       return Void.class;
-  } else {
+    } else {
       return clazz;
+    }
   }
-}
 
-public static Boolean isPrimitive(Class<?> clazz) {
-  if (clazz == null) {
+  public static Boolean isPrimitive(Class<?> clazz) {
+    if (clazz == null) {
       return false;
-  }
-  if (clazz.equals(boolean.class)) {
+    }
+    if (clazz.equals(boolean.class)) {
       return true;
-  } else if (clazz.equals(byte.class)) {
+    }
+    if (clazz.equals(byte.class)) {
       return true;
-  } else if (clazz.equals(char.class)) {
+    } else if (clazz.equals(char.class)) {
       return true;
-  } else if (clazz.equals(double.class)) {
+    } else if (clazz.equals(double.class)) {
       return true;
-  } else if (clazz.equals(float.class)) {
+    } else if (clazz.equals(float.class)) {
       return true;
-  } else if (clazz.equals(int.class)) {
+    } else if (clazz.equals(int.class)) {
       return true;
-  } else if (clazz.equals(long.class)) {
+    } else if (clazz.equals(long.class)) {
       return true;
-  } else if (clazz.equals(short.class)) {
+    } else if (clazz.equals(short.class)) {
       return true;
-  } else if (clazz.equals(void.class)) {
+    } else if (clazz.equals(void.class)) {
       return true;
-  } else {
+    } else {
       return false;
+    }
   }
-}
 
   public static void sleep(long millis) {
     try {
@@ -132,7 +135,7 @@ public static Boolean isPrimitive(Class<?> clazz) {
       @Override
       public void run() {
         try {
-          sleep(millis);
+          Thread.sleep(millis);
           runnable.run();
         } catch (Exception e) {
           WizLog.erro(e);
@@ -144,7 +147,7 @@ public static Boolean isPrimitive(Class<?> clazz) {
   @SafeVarargs
   public static <T> T getFirstNonNull(Future<T>... futures) throws Exception {
     while (true) {
-      boolean anyWorking = false;
+      var anyWorking = false;
       for (Future<T> future : futures) {
         if (future.isDone()) {
           if (future.get() != null) {
@@ -164,18 +167,18 @@ public static Boolean isPrimitive(Class<?> clazz) {
   private static ExecutorService executor;
 
   public static ExecutorService getExecutor() {
-    if (executor == null) {
-      executor = Executors.newCachedThreadPool();
+    if (WizLang.executor == null) {
+      WizLang.executor = Executors.newCachedThreadPool();
     }
-    return executor;
+    return WizLang.executor;
   }
 
   public static Future<?> submit(Runnable runnable) {
-    return getExecutor().submit(runnable);
+    return WizLang.getExecutor().submit(runnable);
   }
 
   public static <T> Future<T> submit(Callable<T> callable) {
-    return getExecutor().submit(callable);
+    return WizLang.getExecutor().submit(callable);
   }
 
 }

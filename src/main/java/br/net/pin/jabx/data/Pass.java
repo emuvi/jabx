@@ -18,7 +18,7 @@ public class Pass {
   }
 
   public String getPass() {
-    return data != null ? new String(data) : null;
+    return this.data != null ? new String(this.data) : null;
   }
 
   @Override

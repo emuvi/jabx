@@ -5,29 +5,34 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import br.net.pin.jabx.mage.WizData;
 
 public abstract class Helper {
-  public List<TableHead> getHeads(Connection link) throws Exception {
+  public List<Head> getHeads(Connection link) throws Exception {
     var meta = link.getMetaData();
     var set = meta.getTables(null, null, "%", new String[] {"TABLE"});
-    var result = new ArrayList<TableHead>();
+    var result = new ArrayList<Head>();
     while (set.next()) {
-      result.add(new TableHead(set.getString(1), set.getString(2), set.getString(3)));
+      result.add(new Head(set.getString(1), set.getString(2), set.getString(3)));
     }
     return result;
   }
 
+  public void create(Connection connection, Table table) throws Exception {
+    this.create(connection, table, false);
+  }
+
   public void create(Connection connection, Table table, boolean ifNotExists)
       throws Exception {
-    StringBuilder builder = new StringBuilder();
+    var builder = new StringBuilder();
     builder.append("CREATE TABLE ");
     if (ifNotExists) {
       builder.append("IF NOT EXISTS ");
     }
     builder.append(table.getCatalogSchemaName());
     builder.append(" (");
-    for (int i = 0; i < table.fields.size(); i++) {
+    for (var i = 0; i < table.fields.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
@@ -38,11 +43,11 @@ public abstract class Helper {
   }
 
   public ResultSet select(Connection link, Select select) throws Exception {
-    StringBuilder builder = new StringBuilder("SELECT ");
+    var builder = new StringBuilder("SELECT ");
     if (select.fields == null || !select.fields.isEmpty()) {
       builder.append("*");
     } else {
-      for (int i = 0; i < select.fields.size(); i++) {
+      for (var i = 0; i < select.fields.size(); i++) {
         if (i > 0) {
           builder.append(", ");
         }
@@ -66,17 +71,17 @@ public abstract class Helper {
   }
 
   public int insert(Connection link, Insert insert) throws Exception {
-    StringBuilder builder = new StringBuilder("INSERT INTO ");
+    var builder = new StringBuilder("INSERT INTO ");
     builder.append(insert.table.getCatalogSchemaName());
     builder.append(" (");
-    for (int i = 0; i < insert.valueds.size(); i++) {
+    for (var i = 0; i < insert.valueds.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
       builder.append(insert.valueds.get(i).name);
     }
     builder.append(") VALUES (");
-    for (int i = 0; i < insert.valueds.size(); i++) {
+    for (var i = 0; i < insert.valueds.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
@@ -100,10 +105,10 @@ public abstract class Helper {
   }
 
   public int update(Connection link, Update update) throws Exception {
-    StringBuilder builder = new StringBuilder("UPDATE ");
+    var builder = new StringBuilder("UPDATE ");
     builder.append(update.table.getCatalogSchemaName());
-    builder.append(" SET");
-    for (int i = 0; i < update.valueds.size(); i++) {
+    builder.append(" SET ");
+    for (var i = 0; i < update.valueds.size(); i++) {
       if (i > 0) {
         builder.append(", ");
       }
@@ -130,13 +135,13 @@ public abstract class Helper {
           this.setParameter(prepared, param_index, clause.valued);
           param_index++;
         }
-      } 
+      }
     }
     return prepared.executeUpdate();
   }
 
   public ResultSet delete(Connection link, Delete delete) throws Exception {
-    StringBuilder builder = new StringBuilder("DELETE FROM ");
+    var builder = new StringBuilder("DELETE FROM ");
     builder.append(delete.table.getSchemaName());
     builder.append(this.formatClauses(delete.clauses));
     var prepared = link.prepareStatement(builder.toString());
@@ -152,7 +157,7 @@ public abstract class Helper {
     return prepared.executeQuery();
   }
 
-  public String formatNature(TableField field) {
+  public String formatNature(Field field) {
     var builder = new StringBuilder(field.name);
     switch (field.nature) {
       case BOOL:
@@ -239,38 +244,37 @@ public abstract class Helper {
       default:
         throw new UnsupportedOperationException();
     }
-    if (field.notNull) {
+    if (Objects.equals(field.notNull, true)) {
       builder.append(" NOT NULL");
     }
     return builder.toString();
   }
 
   public String formatClauses(List<Clause> clauses) {
-    if (clauses != null && !clauses.isEmpty()) {
-      var builder = new StringBuilder();
-      builder.append(" WHERE ");
-      var nextIsOr = false;
-      for (int i = 0; i < clauses.size(); i++) {
-        if (i > 0) {
-          builder.append(nextIsOr ? " OR " : " AND ");
-        }
-        var clause = clauses.get(i);
-        if (clause.same == Same.DIVERS) {
-          builder.append(" NOT ");
-        }
-        builder.append(clause.valued.name);
-        if (clause.valued.data == null) {
-          builder.append(" IS NULL ");
-        } else {
-          builder.append(this.formatCondition(clause.likes));
-          builder.append(" ? ");
-        }
-        nextIsOr = clause.tie == Tie.OR;
-      }
-      return builder.toString();
-    } else {
+    if ((clauses == null) || clauses.isEmpty()) {
       return "";
     }
+    var builder = new StringBuilder();
+    builder.append(" WHERE ");
+    var nextIsOr = false;
+    for (var i = 0; i < clauses.size(); i++) {
+      if (i > 0) {
+        builder.append(nextIsOr ? " OR " : " AND ");
+      }
+      var clause = clauses.get(i);
+      if (clause.same == Same.DIVERS) {
+        builder.append(" NOT ");
+      }
+      builder.append(clause.valued.name);
+      if (clause.valued.data == null) {
+        builder.append(" IS NULL ");
+      } else {
+        builder.append(this.formatCondition(clause.likes));
+        builder.append(" ? ");
+      }
+      nextIsOr = clause.tie == Tie.OR;
+    }
+    return builder.toString();
   }
 
   public String formatCondition(Condition condition) {

@@ -16,5 +16,5 @@ public class PaceCmd implements Pace {
 
   @Override
   public void waitIfPausedAndThrowIfStopped() throws Exception {}
-  
+
 }

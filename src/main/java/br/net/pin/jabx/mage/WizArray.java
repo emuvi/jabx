@@ -47,9 +47,9 @@ public class WizArray {
     if (onArray == null) {
       return null;
     }
-    T[] result = Arrays.copyOf(onArray, Math.max(onArray.length + 1, index + 1));
+    var result = Arrays.copyOf(onArray, Math.max(onArray.length + 1, index + 1));
     result[index] = value;
-    for (int i = index; i < onArray.length; i++) {
+    for (var i = index; i < onArray.length; i++) {
       result[i + 1] = onArray[i];
     }
     return result;
@@ -66,8 +66,8 @@ public class WizArray {
         list.add(element);
       }
     }
-    T[] result = Arrays.copyOf(elements, list.size());
-    for (int i = 0; i < list.size(); i++) {
+    var result = Arrays.copyOf(elements, list.size());
+    for (var i = 0; i < list.size(); i++) {
       result[i] = list.get(i);
     }
     return result;
@@ -75,7 +75,7 @@ public class WizArray {
 
   @SuppressWarnings("all")
   public static <T> T[] make(Class<T> clazz, T value, int size) {
-    T[] result = (T[]) Array.newInstance(clazz, size);
+    var result = (T[]) Array.newInstance(clazz, size);
     Arrays.fill(result, value);
     return result;
   }

@@ -6,24 +6,24 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.List;
-import br.net.pin.jabx.data.Linker;
+import br.net.pin.jabx.data.DBLink;
+import br.net.pin.jabx.data.Head;
 import br.net.pin.jabx.data.Select;
 import br.net.pin.jabx.data.Table;
-import br.net.pin.jabx.data.TableHead;
 import br.net.pin.jabx.flow.Pace;
 import br.net.pin.jabx.flow.PaceCmd;
 
 public class CSVExport extends Thread {
 
-  private final Linker origin;
+  private final DBLink origin;
   private final File destiny;
   private final Pace pace;
 
-  public CSVExport(Linker origin, File destiny) {
+  public CSVExport(DBLink origin, File destiny) {
     this(origin, destiny, null);
   }
 
-  public CSVExport(Linker origin, File destiny, Pace pace) {
+  public CSVExport(DBLink origin, File destiny, Pace pace) {
     super("ExportToCSV");
     this.origin = origin;
     this.destiny = destiny;
@@ -33,44 +33,45 @@ public class CSVExport extends Thread {
   @Override
   public void run() {
     try {
-      pace.log("Origin: " + origin);
-      pace.log("Establishing destiny: " + destiny);
-      if (!destiny.exists()) {
-        Files.createDirectories(destiny.toPath());
+      this.pace.log("Origin: " + this.origin);
+      this.pace.log("Establishing destiny: " + this.destiny);
+      if (!this.destiny.exists()) {
+        Files.createDirectories(this.destiny.toPath());
       }
-      if (!destiny.exists()) {
+      if (!this.destiny.exists()) {
         throw new Exception("Could not create the destination folder.");
       }
-      if (!destiny.isDirectory()) {
+      if (!this.destiny.isDirectory()) {
         throw new Exception("The destination must be a directory.");
       }
-      pace.waitIfPausedAndThrowIfStopped();
-      pace.log("Connecting to Origin...");
-      try (Connection originConn = origin.connect()) {
-        pace.log("Connected.");
-        pace.waitIfPausedAndThrowIfStopped();
-        pace.log("Getting tables...");
-        List<TableHead> heads = origin.base.getHelper().getHeads(originConn);
-        for (TableHead head : heads) {
-          pace.log("Processing: " + head);
-          Table table = head.getTable(originConn);
-          try (PrintWriter writer = new PrintWriter(new FileOutputStream(new File(destiny,
+      this.pace.waitIfPausedAndThrowIfStopped();
+      this.pace.log("Connecting to Origin...");
+      try (var originConn = this.origin.connect()) {
+        this.pace.log("Connected.");
+        this.pace.waitIfPausedAndThrowIfStopped();
+        this.pace.log("Getting tables...");
+        var heads = this.origin.base.helper.getHeads(originConn);
+        for (Head head : heads) {
+          this.pace.log("Processing: " + head);
+          var table = head.getTable(originConn);
+          try (var writer = new PrintWriter(new FileOutputStream(new File(
+              this.destiny,
               head.getNameForFile() + ".tab"), false), true)) {
             writer.write(table.toString());
           }
-          final var fileDestiny = new File(destiny, head.getNameForFile() + ".csv");
-          try (CSVFile csvFile = new CSVFile(fileDestiny, CSVFile.Mode.WRITE)) {
+          final var fileDestiny = new File(this.destiny, head.getNameForFile() + ".csv");
+          try (var csvFile = new CSVFile(fileDestiny, CSVFile.Mode.WRITE)) {
             final var row = new String[table.fields.size()];
-            for (int i = 0; i < table.fields.size(); i++) {
+            for (var i = 0; i < table.fields.size(); i++) {
               row[i] = table.fields.get(i).name;
             }
             csvFile.writeLine(row);
-            var rstOrigin = origin.base.getHelper().select(originConn, new Select(head));
-            long recordCount = 0;
+            var rstOrigin = this.origin.base.helper.select(originConn, new Select(head));
+            var recordCount = 0L;
             while (rstOrigin.next()) {
               recordCount++;
-              pace.log("Writing record " + recordCount + " of " + head.name);
-              for (int i = 0; i < table.fields.size(); i++) {
+              this.pace.log("Writing record " + recordCount + " of " + head.name);
+              for (var i = 0; i < table.fields.size(); i++) {
                 row[i] = table.fields.get(i).formatValue(rstOrigin.getObject(i + 1));
               }
               csvFile.writeLine(row);
@@ -78,9 +79,9 @@ public class CSVExport extends Thread {
           }
         }
       }
-      pace.log("CSV Export Finished!");
+      this.pace.log("CSV Export Finished!");
     } catch (Exception error) {
-      pace.log(error);
+      this.pace.log(error);
     }
   }
 }

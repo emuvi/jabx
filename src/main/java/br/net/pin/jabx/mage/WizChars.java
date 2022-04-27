@@ -15,7 +15,7 @@ public class WizChars {
       return "";
     }
     for (String chars : ofStrings) {
-      if (isNotEmpty(chars)) {
+      if (WizChars.isNotEmpty(chars)) {
         return chars;
       }
     }
@@ -23,7 +23,7 @@ public class WizChars {
   }
 
   public static String sum(String withUnion, String... allStrings) {
-    return sum(withUnion, null, allStrings);
+    return WizChars.sum(withUnion, null, allStrings);
   }
 
   public static String sum(String withUnion, StringBuilder andBuilder,
@@ -37,7 +37,7 @@ public class WizChars {
     var atLeastOne = false;
     var result = andBuilder != null ? andBuilder : new StringBuilder();
     for (String chars : allStrings) {
-      if (isNotEmpty(chars)) {
+      if (WizChars.isNotEmpty(chars)) {
         if (atLeastOne) {
           result.append(withUnion);
         } else {
@@ -53,7 +53,7 @@ public class WizChars {
     if (fromString == null) {
       return null;
     }
-    String result = fromString;
+    var result = fromString;
     for (int i = 'A'; i <= 'Z'; i++) {
       result = result.replace(((char) i) + "", " " + ((char) i));
     }
@@ -65,15 +65,14 @@ public class WizChars {
       return false;
     }
     if (inChars.length() > 0) {
-      String first = inChars.substring(0, 1);
+      var first = inChars.substring(0, 1);
       return first.toUpperCase().equals(first);
-    } else {
-      return false;
     }
+    return false;
   }
 
   public static String toUpperOnlyFirstChar(String inChars) {
-    StringBuilder result = new StringBuilder();
+    var result = new StringBuilder();
     if (inChars.length() > 0) {
       result.append(inChars.substring(0, 1).toUpperCase());
     }
@@ -84,7 +83,7 @@ public class WizChars {
   }
 
   public static String toUpperFirstChar(String inChars) {
-    StringBuilder result = new StringBuilder();
+    var result = new StringBuilder();
     if (inChars.length() > 0) {
       result.append(inChars.substring(0, 1).toUpperCase());
     }
@@ -95,15 +94,11 @@ public class WizChars {
   }
 
   public static String getFromDoubleQuotes(String inChars) {
-    if (inChars == null) {
+    if ((inChars == null) || (inChars.length() < 2)) {
       return inChars;
     }
-    if (inChars.length() >= 2) {
-      if (inChars.charAt(0) == '"' && inChars.charAt(inChars.length() - 1) == '"') {
-        return inChars.substring(1, inChars.length() - 1);
-      } else {
-        return inChars;
-      }
+    if (inChars.charAt(0) == '"' && inChars.charAt(inChars.length() - 1) == '"') {
+      return inChars.substring(1, inChars.length() - 1);
     } else {
       return inChars;
     }
@@ -115,9 +110,8 @@ public class WizChars {
     }
     if (ofString.contains(".")) {
       return Double.parseDouble(ofString);
-    } else {
-      return Integer.parseInt(ofString);
     }
+    return Integer.parseInt(ofString);
   }
 
   public static String getLetters(String ofString) {
@@ -160,25 +154,25 @@ public class WizChars {
   }
 
   public static String fill(char withChar, int untilLength) {
-    return fill(null, withChar, untilLength, true);
+    return WizChars.fill(null, withChar, untilLength, true);
   }
 
   public static String fill(String theString, char withChar, int untilLength) {
-    return fill(theString, withChar, untilLength, false);
+    return WizChars.fill(theString, withChar, untilLength, false);
   }
 
   public static String fillAtStart(String theString, char withChar, int untilLength) {
-    return fill(theString, withChar, untilLength, true);
+    return WizChars.fill(theString, withChar, untilLength, true);
   }
 
   public static String fill(String theString, char withChar, int untilLength,
       boolean atStart) {
-    StringBuilder result = new StringBuilder();
-    int diference = untilLength - (theString != null ? theString.length() : 0);
+    var result = new StringBuilder();
+    var diference = untilLength - (theString != null ? theString.length() : 0);
     if (!atStart && theString != null) {
       result.append(theString);
     }
-    for (int i = 0; i < diference; i++) {
+    for (var i = 0; i < diference; i++) {
       result.append(withChar);
     }
     if (atStart && theString != null) {
@@ -188,8 +182,8 @@ public class WizChars {
   }
 
   public static boolean contains(String inChars, Character... anyChar) {
-    if (isNotEmpty(inChars) && anyChar != null && anyChar.length > 0) {
-      for (int i = 0; i < inChars.length(); i++) {
+    if (WizChars.isNotEmpty(inChars) && anyChar != null && anyChar.length > 0) {
+      for (var i = 0; i < inChars.length(); i++) {
         if (WizArray.has(inChars.charAt(i), anyChar)) {
           return true;
         }
@@ -202,7 +196,7 @@ public class WizChars {
     if (from == null || source == null || source.isEmpty()) {
       return source;
     }
-    for (int i = 0; i < from.length; i++) {
+    for (var i = 0; i < from.length; i++) {
       var newValue = to == null || i >= to.length ? "" : to[i];
       source = source.replace(from[i], newValue);
     }
@@ -210,7 +204,7 @@ public class WizChars {
   }
 
   public static String replaceControlFlow(String inChars) {
-    if (isEmpty(inChars)) {
+    if (WizChars.isEmpty(inChars)) {
       return inChars;
     }
     inChars = inChars.replace("\\", "\\\\");
@@ -218,12 +212,11 @@ public class WizChars {
     inChars = inChars.replace("\n", "\\n");
     inChars = inChars.replace("\t", "\\t");
     inChars = inChars.replace("\f", "\\f");
-    inChars = inChars.replace("\b", "\\b");
-    return inChars;
+    return inChars.replace("\b", "\\b");
   }
 
   public static String remakeControlFlow(String inChars) {
-    if (isEmpty(inChars)) {
+    if (WizChars.isEmpty(inChars)) {
       return inChars;
     }
     inChars = inChars.replace("\\b", "\b");
@@ -231,7 +224,6 @@ public class WizChars {
     inChars = inChars.replace("\\t", "\t");
     inChars = inChars.replace("\\n", "\n");
     inChars = inChars.replace("\\r", "\r");
-    inChars = inChars.replace("\\\\", "\\");
-    return inChars;
+    return inChars.replace("\\\\", "\\");
   }
 }

@@ -4,46 +4,54 @@ import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import com.google.gson.Gson;
 import br.net.pin.jabx.mage.WizChars;
 import br.net.pin.jabx.mage.WizData;
-import com.google.gson.Gson;
 
-public class TableHead {
+public class Head {
   public String catalog;
   public String schema;
   public String name;
 
-  public TableHead() {
+  public Head() {}
+
+  public Head(String name) {
+    this.name = name;
   }
 
-  public TableHead(String catalog, String schema, String name) {
+  public Head(String schema, String name) {
+    this.schema = schema;
+    this.name = name;
+  }
+
+  public Head(String catalog, String schema, String name) {
     this.catalog = catalog;
     this.schema = schema;
     this.name = name;
   }
-  
+
   public String getSchemaName() {
-    return WizChars.sum(".", schema, name);
+    return WizChars.sum(".", this.schema, this.name);
   }
 
   public String getCatalogSchemaName() {
-    return WizChars.sum(".", catalog, schema, name);
+    return WizChars.sum(".", this.catalog, this.schema, this.name);
   }
 
   public String getNameForFile() {
-    return WizChars.sum(".", catalog, schema, name);
+    return WizChars.sum(".", this.catalog, this.schema, this.name);
   }
 
   public Table getTable(Connection connection) throws Exception {
-    Table result = new Table(this, new ArrayList<>(), new ArrayList<>());
-    DatabaseMetaData meta = connection.getMetaData();
-    ResultSet set = meta.getPrimaryKeys(this.catalog, this.schema, this.name);
+    var result = new Table(this, new ArrayList<>(), new ArrayList<>());
+    var meta = connection.getMetaData();
+    var set = meta.getPrimaryKeys(this.catalog, this.schema, this.name);
     while (set.next()) {
       result.keys.add(set.getString(4));
     }
-    ResultSet rst = meta.getColumns(this.catalog, this.schema, this.name, "%");
+    var rst = meta.getColumns(this.catalog, this.schema, this.name, "%");
     while (rst.next()) {
-      TableField campo = new TableField();
+      var campo = new Field();
       campo.name = rst.getString(4);
       campo.nature = WizData.getNatureOfSQL(rst.getInt(5));
       campo.size = rst.getInt(7);
@@ -60,10 +68,10 @@ public class TableHead {
 
   @Override
   public String toString() {
-      return new Gson().toJson(this);
+    return new Gson().toJson(this);
   }
 
-  public static TableHead fromString(String json) {
-    return new Gson().fromJson(json, TableHead.class);
+  public static Head fromString(String json) {
+    return new Gson().fromJson(json, Head.class);
   }
 }
