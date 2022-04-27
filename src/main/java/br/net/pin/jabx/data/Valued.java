@@ -4,8 +4,17 @@ import com.google.gson.Gson;
 
 public class Valued {
   public String name;
-  public Object data;
   public Nature type;
+  public Object data;
+
+  public Valued() {
+  }
+
+  public Valued(String name, Nature type, Object data) {
+    this.name = name;
+    this.type = type;
+    this.data = data;
+  }
 
   @Override
   public String toString() {

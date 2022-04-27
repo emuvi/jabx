@@ -5,9 +5,9 @@ import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.util.List;
 import br.net.pin.jabx.data.Linker;
+import br.net.pin.jabx.data.Select;
 import br.net.pin.jabx.data.Table;
 import br.net.pin.jabx.data.TableHead;
 import br.net.pin.jabx.flow.Pace;
@@ -65,7 +65,7 @@ public class CSVExport extends Thread {
               row[i] = table.fields.get(i).name;
             }
             csvFile.writeLine(row);
-            ResultSet rstOrigin = origin.base.getHelper().selectAll(table, originConn);
+            var rstOrigin = origin.base.getHelper().select(originConn, new Select(head));
             long recordCount = 0;
             while (rstOrigin.next()) {
               recordCount++;

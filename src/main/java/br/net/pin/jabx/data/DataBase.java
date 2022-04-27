@@ -1,15 +1,15 @@
 package br.net.pin.jabx.data;
 
-public enum Data {
+public enum DataBase {
 
-  HSQLMemory("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:$path", 9000,
-      new HelperHSQL()),
+  HSQLDBMemory("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:$path", 9000,
+      new HelperHSQLDB()),
 
-  HSQLLocal("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:$path;hsqldb.lock_file=true", 9000,
-      new HelperHSQL()),
+  HSQLDBLocal("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:$path;hsqldb.lock_file=true", 9000,
+      new HelperHSQLDB()),
 
-  HSQLClient("org.hsqldb.jdbcDriver", "jdbc:hsqldb:hsql://$path:$port/$data", 9000,
-      new HelperHSQL()),
+  HSQLDBClient("org.hsqldb.jdbcDriver", "jdbc:hsqldb:hsql://$path:$port/$data", 9000,
+      new HelperHSQLDB()),
 
   DerbyInner("org.apache.derby.jdbc.EmbeddedDriver", "jdbc:derby:$path;create=true", 1527,
       new HelperDerby()),
@@ -37,7 +37,7 @@ public enum Data {
   private final Integer defaultPort;
   private final Helper helper;
 
-  private Data(String clazz, String formation, Integer defaultPort, Helper auxiliar) {
+  private DataBase(String clazz, String formation, Integer defaultPort, Helper auxiliar) {
     this.clazz = clazz;
     this.formation = formation;
     this.defaultPort = defaultPort;
@@ -69,8 +69,8 @@ public enum Data {
     }
   }
 
-  public static Data fromURL(String jdbc) {
-    for (Data data : Data.values()) {
+  public static DataBase fromURL(String jdbc) {
+    for (DataBase data : DataBase.values()) {
       if (jdbc.startsWith(data.getURLIdenty())) {
         return data;
       }

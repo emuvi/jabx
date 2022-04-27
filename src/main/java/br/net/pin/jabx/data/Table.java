@@ -10,15 +10,6 @@ public class Table {
   public List<String> keys;
 
   public Table() {
-    this(null, null, null);
-  }
-
-  public Table(TableHead head) {
-    this(head, null, null);
-  }
-
-  public Table(TableHead head, List<TableField> fields) {
-    this(head, fields, null);
   }
 
   public Table(TableHead head, List<TableField> fields, List<String> keys) {

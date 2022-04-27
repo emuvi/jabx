@@ -7,6 +7,16 @@ public class Clause {
   public Condition likes;
   public Valued valued;
   public Tie tie;
+
+  public Clause() {
+  }
+
+  public Clause(Same same, Condition likes, Valued valued, Tie tie) {
+    this.same = same;
+    this.likes = likes;
+    this.valued = valued;
+    this.tie = tie;
+  }
   
   @Override
   public String toString() {

@@ -5,10 +5,12 @@ import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Objects;
+import br.net.pin.jabx.data.Insert;
 import br.net.pin.jabx.data.Linker;
 import br.net.pin.jabx.data.Table;
 import br.net.pin.jabx.data.TableField;
 import br.net.pin.jabx.data.TableHead;
+import br.net.pin.jabx.data.Valued;
 import br.net.pin.jabx.flow.Pace;
 import br.net.pin.jabx.mage.WizFile;
 
@@ -60,7 +62,7 @@ public class CSVImport extends Thread {
     if (tableFile.exists()) {
       progress.log("Loading table metadata from file.");
       table = Table.fromString(Files.readString(tableFile.toPath()));
-      destiny.base.getHelper().createTable(connection, table, true);
+      destiny.base.getHelper().create(connection, table, true);
     } else {
       progress.log("Loading table metadata from connection.");
       String schema = null;
@@ -71,7 +73,6 @@ public class CSVImport extends Thread {
       }
       table = new TableHead(null, schema, name).getTable(connection);
     }
-
     try (CSVFile reader = new CSVFile(csvFile, CSVFile.Mode.READ)) {
       progress.log("CSV File: " + csvFile.getName() + " opened.");
       boolean firstLine = true;
@@ -92,6 +93,7 @@ public class CSVImport extends Thread {
         }
         var fields = new ArrayList<TableField>();
         if (firstLine) {
+          progress.log("Making sure the table fields matchs on the first line.");
           firstLine = false;
           for (int i = 0; i < values.length; i++) {
             for (TableField field : table.fields) {
@@ -106,7 +108,13 @@ public class CSVImport extends Thread {
           }
         } else {
           progress.log("Inserting line  " + lineCount + " of file: " + csvFile.getName());
-          destiny.base.getHelper().insert(table, connection, values);
+          var valueds = new ArrayList<Valued>();
+          for (int i = 0; i < values.length; i++) {
+            var field = table.fields.get(i);
+            var valued = new Valued(field.name, field.nature, values[i]);
+            valueds.add(valued);
+          }
+          destiny.base.getHelper().insert(connection, new Insert(table.head, valueds));
         }
       }
     }

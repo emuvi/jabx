@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import br.net.pin.jabx.mage.WizChars;
 import br.net.pin.jabx.mage.WizData;
+import com.google.gson.Gson;
 
 public class TableHead {
   public String catalog;
@@ -13,15 +14,6 @@ public class TableHead {
   public String name;
 
   public TableHead() {
-    this(null, null, null);
-  }
-
-  public TableHead(String catalog) {
-    this(catalog, null, null);
-  }
-
-  public TableHead(String catalog, String schema) {
-    this(catalog, schema, null);
   }
 
   public TableHead(String catalog, String schema, String name) {
@@ -29,7 +21,7 @@ public class TableHead {
     this.schema = schema;
     this.name = name;
   }
-
+  
   public String getSchemaName() {
     return WizChars.sum(".", schema, name);
   }
@@ -64,5 +56,14 @@ public class TableHead {
       result.fields.add(campo);
     }
     return result;
+  }
+
+  @Override
+  public String toString() {
+      return new Gson().toJson(this);
+  }
+
+  public static TableHead fromString(String json) {
+    return new Gson().fromJson(json, TableHead.class);
   }
 }

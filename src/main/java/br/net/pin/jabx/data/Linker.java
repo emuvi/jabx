@@ -6,12 +6,25 @@ import com.google.gson.Gson;
 
 public class Linker {
   public String name;
-  public Data base;
+  public DataBase base;
   public String path;
   public Integer port;
   public String data;
   public String user;
   public Pass pass;
+
+  public Linker() {
+  }
+
+  public Linker(String name, DataBase base, String path, Integer port, String data, String user, Pass pass) {
+    this.name = name;
+    this.base = base;
+    this.path = path;
+    this.port = port;
+    this.data = data;
+    this.user = user;
+    this.pass = pass;
+  }
 
   public String getFormed() {
     String result = base.getFormation();

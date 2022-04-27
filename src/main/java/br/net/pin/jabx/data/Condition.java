@@ -1,7 +1,6 @@
 package br.net.pin.jabx.data;
 
 public enum Condition {
-
   EQUALS, 
   
   BIGGER, LESSER, 
@@ -11,5 +10,4 @@ public enum Condition {
   STARTS_WITH, ENDS_WITH,
 
   CONTAINS,
-  
 }

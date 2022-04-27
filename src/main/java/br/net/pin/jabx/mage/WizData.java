@@ -1,9 +1,13 @@
 package br.net.pin.jabx.mage;
 
+import java.math.BigDecimal;
+import java.sql.Blob;
+import java.sql.Date;
+import java.sql.Time;
+import java.sql.Timestamp;
 import br.net.pin.jabx.data.Nature;
 
 public class WizData {
-
   public static Nature getNatureOfSQL(int jdbcType) {
     switch (jdbcType) {
       case 16:
@@ -52,6 +56,59 @@ public class WizData {
     }
   }
 
+  public static Boolean getBoolean(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
 
+  public static Byte getByte(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
 
+  public static Short getShort(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static Integer getInt(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static Long getLong(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static Float getFloat(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static Double getDouble(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static BigDecimal getBigDecimal(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static String getString(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static Date getDate(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static Time getTime(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static Timestamp getTimestamp(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static byte[] getBytes(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
+
+  public static Blob getBlob(Object data) {
+    throw new UnsupportedOperationException("Not implemented yet");
+  }
 }
