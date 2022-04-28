@@ -206,7 +206,6 @@ public abstract class Helper {
         builder.append(" CHAR(1)");
         break;
       case CHARS:
-      case PASS:
         builder.append(" VARCHAR");
         if (field.size != null) {
           builder.append("(");
@@ -338,7 +337,6 @@ public abstract class Helper {
           break;
         case CHAR:
         case CHARS:
-        case PASS:
           prepared.setString(index, WizData.getString(valued.data));
           break;
         case DATE:

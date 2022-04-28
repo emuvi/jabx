@@ -11,7 +11,7 @@ public enum Nature {
 
   NUMERIC, BIG_NUMERIC,
 
-  CHAR, CHARS, PASS,
+  CHAR, CHARS,
 
   DATE, TIME, DATE_TIME, TIMESTAMP,
 

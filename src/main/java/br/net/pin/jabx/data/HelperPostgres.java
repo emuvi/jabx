@@ -51,7 +51,6 @@ public class HelperPostgres extends Helper {
         builder.append(" CHAR(1)");
         break;
       case CHARS:
-      case PASS:
         builder.append(" VARCHAR");
         if (field.size != null) {
           builder.append("(");
