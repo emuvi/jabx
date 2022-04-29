@@ -2,27 +2,31 @@ package br.net.pin.jabx.data;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import com.google.gson.Gson;
+
 import br.net.pin.jabx.mage.WizChars;
 import br.net.pin.jabx.mage.WizData;
 
-public class Head implements Fixable {
+public class Registry implements Fixable {
   public String catalog;
   public String schema;
   public String name;
 
-  public Head() {}
+  public Registry() {
+  }
 
-  public Head(String name) {
+  public Registry(String name) {
     this.name = name;
   }
 
-  public Head(String schema, String name) {
+  public Registry(String schema, String name) {
     this.schema = schema;
     this.name = name;
   }
 
-  public Head(String catalog, String schema, String name) {
+  public Registry(String catalog, String schema, String name) {
     this.catalog = catalog;
     this.schema = schema;
     this.name = name;
@@ -65,11 +69,28 @@ public class Head implements Fixable {
   }
 
   @Override
+  public boolean equals(Object o) {
+    if (o == this)
+      return true;
+    if (!(o instanceof Registry)) {
+      return false;
+    }
+    Registry registry = (Registry) o;
+    return Objects.equals(catalog, registry.catalog) && Objects.equals(schema, registry.schema)
+        && Objects.equals(name, registry.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(catalog, schema, name);
+  }
+
+  @Override
   public String toString() {
     return new Gson().toJson(this);
   }
 
-  public static Head fromString(String json) {
-    return new Gson().fromJson(json, Head.class);
+  public static Registry fromString(String json) {
+    return new Gson().fromJson(json, Registry.class);
   }
 }

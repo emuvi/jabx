@@ -1,17 +1,19 @@
 package br.net.pin.jabx.data;
 
 import java.util.List;
+
 import com.google.gson.Gson;
 
 public class Delete implements Fixable {
-  public Head table;
+  public Registry registry;
   public List<Clause> clauses;
   public Integer limit;
 
-  public Delete() {}
+  public Delete() {
+  }
 
-  public Delete(Head table, List<Clause> clauses, Integer limit) {
-    this.table = table;
+  public Delete(Registry registry, List<Clause> clauses, Integer limit) {
+    this.registry = registry;
     this.clauses = clauses;
     this.limit = limit;
   }
@@ -21,7 +23,7 @@ public class Delete implements Fixable {
     return new Gson().toJson(this);
   }
 
-  public static Table fromString(String json) {
-    return new Gson().fromJson(json, Table.class);
+  public static Delete fromString(String json) {
+    return new Gson().fromJson(json, Delete.class);
   }
 }

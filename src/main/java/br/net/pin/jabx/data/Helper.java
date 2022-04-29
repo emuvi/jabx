@@ -6,15 +6,16 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
 import br.net.pin.jabx.mage.WizData;
 
 public abstract class Helper {
-  public List<Head> getHeads(Connection link) throws Exception {
+  public List<Registry> getHeads(Connection link) throws Exception {
     var meta = link.getMetaData();
     var set = meta.getTables(null, null, "%", new String[] { "TABLE" });
-    var result = new ArrayList<Head>();
+    var result = new ArrayList<Registry>();
     while (set.next()) {
-      result.add(new Head(set.getString(1), set.getString(2), set.getString(3)));
+      result.add(new Registry(set.getString(1), set.getString(2), set.getString(3)));
     }
     return result;
   }
@@ -55,7 +56,7 @@ public abstract class Helper {
       }
     }
     builder.append(" FROM ");
-    builder.append(select.table.getSchemaName());
+    builder.append(select.registry.getSchemaName());
     builder.append(this.formClauses(select.clauses));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
@@ -72,7 +73,7 @@ public abstract class Helper {
 
   public int insert(Connection link, Insert insert) throws Exception {
     var builder = new StringBuilder("INSERT INTO ");
-    builder.append(insert.table.getCatalogSchemaName());
+    builder.append(insert.registry.getCatalogSchemaName());
     builder.append(" (");
     for (var i = 0; i < insert.valueds.size(); i++) {
       if (i > 0) {
@@ -106,7 +107,7 @@ public abstract class Helper {
 
   public int update(Connection link, Update update) throws Exception {
     var builder = new StringBuilder("UPDATE ");
-    builder.append(update.table.getCatalogSchemaName());
+    builder.append(update.registry.getCatalogSchemaName());
     builder.append(" SET ");
     for (var i = 0; i < update.valueds.size(); i++) {
       if (i > 0) {
@@ -142,7 +143,7 @@ public abstract class Helper {
 
   public ResultSet delete(Connection link, Delete delete) throws Exception {
     var builder = new StringBuilder("DELETE FROM ");
-    builder.append(delete.table.getSchemaName());
+    builder.append(delete.registry.getSchemaName());
     builder.append(this.formClauses(delete.clauses));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
@@ -261,7 +262,7 @@ public abstract class Helper {
         builder.append(nextIsOr ? " OR " : " AND ");
       }
       var clause = clauses.get(i);
-      if (clause.same == Same.DIVERS) {
+      if (clause.seem == Seems.DIVERSE) {
         builder.append(" NOT ");
       }
       builder.append(clause.valued.name);
@@ -271,12 +272,12 @@ public abstract class Helper {
         builder.append(this.formCondition(clause.likes));
         builder.append(" ? ");
       }
-      nextIsOr = clause.tie == Tie.OR;
+      nextIsOr = clause.tied == Tying.OR;
     }
     return builder.toString();
   }
 
-  public String formCondition(Condition condition) {
+  public String formCondition(Likeds condition) {
     switch (condition) {
       case EQUALS:
         return "=";

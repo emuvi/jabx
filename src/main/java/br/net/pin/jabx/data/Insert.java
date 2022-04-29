@@ -1,20 +1,22 @@
 package br.net.pin.jabx.data;
 
 import java.util.List;
+
 import com.google.gson.Gson;
 
 public class Insert implements Fixable {
-  public Head table;
+  public Registry registry;
   public List<Valued> valueds;
 
-  public Insert() {}
-
-  public Insert(Head table) {
-    this.table = table;
+  public Insert() {
   }
 
-    public Insert(Head table, List<Valued> valueds) {
-    this.table = table;
+  public Insert(Registry registry) {
+    this.registry = registry;
+  }
+
+  public Insert(Registry registry, List<Valued> valueds) {
+    this.registry = registry;
     this.valueds = valueds;
   }
 
@@ -23,7 +25,7 @@ public class Insert implements Fixable {
     return new Gson().toJson(this);
   }
 
-  public static Table fromString(String json) {
-    return new Gson().fromJson(json, Table.class);
+  public static Insert fromString(String json) {
+    return new Gson().fromJson(json, Insert.class);
   }
 }

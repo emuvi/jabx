@@ -5,10 +5,11 @@ import java.nio.file.Files;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Objects;
+
 import br.net.pin.jabx.data.DataLink;
 import br.net.pin.jabx.data.Field;
-import br.net.pin.jabx.data.Head;
 import br.net.pin.jabx.data.Insert;
+import br.net.pin.jabx.data.Registry;
 import br.net.pin.jabx.data.Table;
 import br.net.pin.jabx.data.Valued;
 import br.net.pin.jabx.flow.Pace;
@@ -71,7 +72,7 @@ public class CSVImport extends Thread {
         schema = WizFile.getBaseName(name);
         name = WizFile.getExtension(name);
       }
-      table = new Head(null, schema, name).getTable(connection);
+      table = new Registry(null, schema, name).getTable(connection);
     }
     try (var reader = new CSVFile(csvFile, CSVFile.Mode.READ)) {
       this.progress.log("CSV File: " + csvFile.getName() + " opened.");
@@ -116,7 +117,7 @@ public class CSVImport extends Thread {
             var valued = new Valued(field.name, field.nature, values[i]);
             valueds.add(valued);
           }
-          this.destiny.base.helper.insert(connection, new Insert(table.head, valueds));
+          this.destiny.base.helper.insert(connection, new Insert(table.registry, valueds));
         }
       }
     }

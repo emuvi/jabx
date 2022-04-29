@@ -3,18 +3,19 @@ package br.net.pin.jabx.data;
 import com.google.gson.Gson;
 
 public class Clause implements Fixable {
-  public Same same;
-  public Condition likes;
+  public Seems seem;
+  public Likeds likes;
   public Valued valued;
-  public Tie tie;
+  public Tying tied;
 
-  public Clause() {}
+  public Clause() {
+  }
 
-  public Clause(Same same, Condition likes, Valued valued, Tie tie) {
-    this.same = same;
+  public Clause(Seems seem, Likeds likes, Valued valued, Tying tied) {
+    this.seem = seem;
     this.likes = likes;
     this.valued = valued;
-    this.tie = tie;
+    this.tied = tied;
   }
 
   @Override

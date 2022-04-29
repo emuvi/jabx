@@ -1,7 +1,5 @@
 package br.net.pin.jabx.data;
 
-public enum Tie {
-
+public enum Tying {
   AND, OR
-
 }

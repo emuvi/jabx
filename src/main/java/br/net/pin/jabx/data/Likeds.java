@@ -1,6 +1,6 @@
 package br.net.pin.jabx.data;
 
-public enum Condition {
+public enum Likeds {
   EQUALS,
 
   BIGGER, LESSER,

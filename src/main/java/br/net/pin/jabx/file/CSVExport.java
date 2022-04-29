@@ -4,8 +4,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
 import java.nio.file.Files;
+
 import br.net.pin.jabx.data.DataLink;
-import br.net.pin.jabx.data.Head;
+import br.net.pin.jabx.data.Registry;
 import br.net.pin.jabx.data.Select;
 import br.net.pin.jabx.flow.Pace;
 import br.net.pin.jabx.flow.PaceCmd;
@@ -48,7 +49,7 @@ public class CSVExport extends Thread {
         this.pace.waitIfPausedAndThrowIfStopped();
         this.pace.log("Getting tables...");
         var heads = this.origin.base.helper.getHeads(originConn);
-        for (Head head : heads) {
+        for (Registry head : heads) {
           this.pace.log("Processing: " + head);
           var table = head.getTable(originConn);
           try (var writer = new PrintWriter(new FileOutputStream(new File(
