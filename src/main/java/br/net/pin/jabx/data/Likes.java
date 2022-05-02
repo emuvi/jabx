@@ -1,6 +1,6 @@
 package br.net.pin.jabx.data;
 
-public enum Likeds {
+public enum Likes {
   EQUALS,
 
   BIGGER, LESSER,

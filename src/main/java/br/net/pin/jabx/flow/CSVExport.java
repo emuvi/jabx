@@ -1,4 +1,4 @@
-package br.net.pin.jabx.file;
+package br.net.pin.jabx.flow;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -8,8 +8,6 @@ import java.nio.file.Files;
 import br.net.pin.jabx.data.DataLink;
 import br.net.pin.jabx.data.Registry;
 import br.net.pin.jabx.data.Select;
-import br.net.pin.jabx.flow.Pace;
-import br.net.pin.jabx.flow.PaceCmd;
 
 public class CSVExport extends Thread {
 

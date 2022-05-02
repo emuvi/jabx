@@ -179,10 +179,8 @@ public class WizDate {
   public static final SimpleDateFormat MOMENT_FILE_FORMAT = new SimpleDateFormat(
       "yyyy-MM-dd-HH-mm-ss.ZZZ");
 
-  public static final SimpleDateFormat[] FORMATS = {WizDate.DATE_FORMAT,
-      WizDate.TIME_FORMAT,
-      WizDate.TIME_MILLIS_FORMAT, WizDate.TIMESTAMP_FORMAT, WizDate.MOMENT_FORMAT,
-      WizDate.TIME_FILE_FORMAT,
-      WizDate.TIME_MILLIS_FILE_FORMAT, WizDate.MOMENT_FILE_FORMAT};
-
+  public static final SimpleDateFormat[] FORMATS = {
+      WizDate.DATE_FORMAT, WizDate.TIME_FORMAT, WizDate.TIME_MILLIS_FORMAT, WizDate.TIMESTAMP_FORMAT,
+      WizDate.MOMENT_FORMAT, WizDate.TIME_FILE_FORMAT, WizDate.TIME_MILLIS_FILE_FORMAT, WizDate.MOMENT_FILE_FORMAT
+  };
 }

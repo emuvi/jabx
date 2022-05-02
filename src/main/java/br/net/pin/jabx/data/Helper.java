@@ -262,7 +262,7 @@ public abstract class Helper {
         builder.append(nextIsOr ? " OR " : " AND ");
       }
       var clause = clauses.get(i);
-      if (clause.seem == Seems.DIVERSE) {
+      if (clause.seems == Seems.DIVERSE) {
         builder.append(" NOT ");
       }
       builder.append(clause.valued.name);
@@ -272,12 +272,12 @@ public abstract class Helper {
         builder.append(this.formCondition(clause.likes));
         builder.append(" ? ");
       }
-      nextIsOr = clause.tied == Tying.OR;
+      nextIsOr = clause.tying == Tying.OR;
     }
     return builder.toString();
   }
 
-  public String formCondition(Likeds condition) {
+  public String formCondition(Likes condition) {
     switch (condition) {
       case EQUALS:
         return "=";

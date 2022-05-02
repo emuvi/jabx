@@ -1,4 +1,4 @@
-package br.net.pin.jabx.file;
+package br.net.pin.jabx.flow;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -12,7 +12,6 @@ import br.net.pin.jabx.data.Insert;
 import br.net.pin.jabx.data.Registry;
 import br.net.pin.jabx.data.Table;
 import br.net.pin.jabx.data.Valued;
-import br.net.pin.jabx.flow.Pace;
 import br.net.pin.jabx.mage.WizFile;
 
 public class CSVImport extends Thread {
