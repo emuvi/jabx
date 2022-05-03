@@ -52,7 +52,7 @@ public abstract class Helper {
         if (i > 0) {
           builder.append(", ");
         }
-        builder.append(select.fields.get(i));
+        builder.append(select.fields.get(i).name);
       }
     }
     builder.append(" FROM ");

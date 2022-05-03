@@ -124,6 +124,7 @@ public class WizData {
       case TIMESTAMP:
         return WizDate.formatTimestamp(WizDate.get(value));
       case BYTES:
+      case BLOB:
         return WizBytes.encodeToBase64(WizBytes.get(value));
       default:
         throw new Exception("DataType Not Supported.");

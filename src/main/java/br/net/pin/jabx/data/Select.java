@@ -6,7 +6,7 @@ import com.google.gson.Gson;
 
 public class Select implements Fixable {
   public Registry registry;
-  public List<String> fields;
+  public List<Typed> fields;
   public List<Clause> clauses;
   public List<String> orders;
   public Integer offset;
@@ -19,7 +19,7 @@ public class Select implements Fixable {
     this.registry = registry;
   }
 
-  public Select(Registry registry, List<String> fields, List<Clause> clauses,
+  public Select(Registry registry, List<Typed> fields, List<Clause> clauses,
       List<String> orders, Integer offset, Integer limit) {
     this.registry = registry;
     this.fields = fields;
