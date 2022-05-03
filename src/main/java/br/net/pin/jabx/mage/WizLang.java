@@ -113,6 +113,15 @@ public class WizLang {
     }
   }
 
+  public static boolean isClassChildOf(Class<?> clazz, Class<?> parent) {
+    if (clazz == null || parent == null) {
+      return false;
+    }
+    clazz = getFromPrimitive(clazz);
+    parent = getFromPrimitive(parent);
+    return parent.isAssignableFrom(clazz);
+  }
+
   public static void sleep(long millis) {
     try {
       Thread.sleep(millis);

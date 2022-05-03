@@ -111,6 +111,7 @@ public class WizData {
       case TIMESTAMP:
         return WizDate.parseTimestamp(formatted);
       case BYTES:
+      case BLOB:
         return WizBytes.decodeFromBase64(formatted);
       default:
         throw new Exception("DataType Not Supported.");
@@ -152,58 +153,143 @@ public class WizData {
   }
 
   public static Boolean getBoolean(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Boolean) {
+      return (Boolean) data;
+    }
+    throw new RuntimeException("Could not convert to Boolean from class: " + data.getClass().getCanonicalName());
   }
 
   public static Byte getByte(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Byte) {
+      return (Byte) data;
+    }
+    throw new RuntimeException("Could not convert to Byte from class: " + data.getClass().getCanonicalName());
   }
 
   public static Short getShort(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Short) {
+      return (Short) data;
+    }
+    throw new RuntimeException("Could not convert to Short from class: " + data.getClass().getCanonicalName());
   }
 
-  public static Integer getInt(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+  public static Integer getInteger(Object data) {
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Integer) {
+      return (Integer) data;
+    }
+    throw new RuntimeException("Could not convert to Integer from class: " + data.getClass().getCanonicalName());
   }
 
   public static Long getLong(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Long) {
+      return (Long) data;
+    }
+    throw new RuntimeException("Could not convert to Long from class: " + data.getClass().getCanonicalName());
   }
 
   public static Float getFloat(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Float) {
+      return (Float) data;
+    }
+    throw new RuntimeException("Could not convert to Float from class: " + data.getClass().getCanonicalName());
   }
 
   public static Double getDouble(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Double) {
+      return (Double) data;
+    }
+    throw new RuntimeException("Could not convert to Double from class: " + data.getClass().getCanonicalName());
   }
 
   public static BigDecimal getBigDecimal(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof BigDecimal) {
+      return (BigDecimal) data;
+    }
+    throw new RuntimeException("Could not convert to BigDecimal from class: " + data.getClass().getCanonicalName());
   }
 
   public static String getString(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof String) {
+      return (String) data;
+    }
+    return data.toString();
   }
 
   public static Date getDate(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Date) {
+      return (Date) data;
+    }
+    throw new RuntimeException("Could not convert to Date from class: " + data.getClass().getCanonicalName());
   }
 
   public static Time getTime(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Time) {
+      return (Time) data;
+    }
+    throw new RuntimeException("Could not convert to Time from class: " + data.getClass().getCanonicalName());
   }
 
   public static Timestamp getTimestamp(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+
+    if (data instanceof Timestamp) {
+      return (Timestamp) data;
+    }
+    throw new RuntimeException("Could not convert to Timestamp from class: " + data.getClass().getCanonicalName());
   }
 
   public static byte[] getBytes(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof byte[]) {
+      return (byte[]) data;
+    }
+    throw new RuntimeException("Could not convert to Bytes from class: " + data.getClass().getCanonicalName());
   }
 
   public static Blob getBlob(Object data) {
-    throw new UnsupportedOperationException("Not implemented yet");
+    if (data == null) {
+      return null;
+    }
+    if (data instanceof Blob) {
+      return (Blob) data;
+    }
+    throw new RuntimeException("Could not convert to Blob from class: " + data.getClass().getCanonicalName());
   }
 }

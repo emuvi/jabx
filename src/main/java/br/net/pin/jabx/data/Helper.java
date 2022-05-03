@@ -68,6 +68,14 @@ public abstract class Helper {
         }
       }
     }
+    if (select.limit != null) {
+      builder.append(" LIMIT ");
+      builder.append(select.limit);
+    }
+    if (select.offset != null) {
+      builder.append(" OFFSET ");
+      builder.append(select.offset);
+    }
     return prepared.executeQuery();
   }
 
@@ -138,10 +146,14 @@ public abstract class Helper {
         }
       }
     }
+    if (update.limit != null) {
+      builder.append(" LIMIT ");
+      builder.append(update.limit);
+    }
     return prepared.executeUpdate();
   }
 
-  public ResultSet delete(Connection link, Delete delete) throws Exception {
+  public int delete(Connection link, Delete delete) throws Exception {
     var builder = new StringBuilder("DELETE FROM ");
     builder.append(delete.registry.getSchemaName());
     builder.append(this.formClauses(delete.clauses));
@@ -155,7 +167,11 @@ public abstract class Helper {
         }
       }
     }
-    return prepared.executeQuery();
+    if (delete.limit != null) {
+      builder.append(" LIMIT ");
+      builder.append(delete.limit);
+    }
+    return prepared.executeUpdate();
   }
 
   public String formNature(Field field) {
@@ -319,7 +335,7 @@ public abstract class Helper {
           break;
         case INT:
         case SERIAL:
-          prepared.setInt(index, WizData.getInt(valued.data));
+          prepared.setInt(index, WizData.getInteger(valued.data));
           break;
         case LONG:
         case BIG_SERIAL:
