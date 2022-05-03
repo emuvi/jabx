@@ -3,12 +3,32 @@ package br.net.pin.jabx.mage;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.sql.Date;
+import java.sql.ResultSet;
 import java.sql.Time;
 import java.sql.Timestamp;
 
 import br.net.pin.jabx.data.Nature;
 
 public class WizData {
+  public static String[] getColumnNames(ResultSet results) throws Exception {
+    var meta = results.getMetaData();
+    var names = new String[meta.getColumnCount()];
+    for (int i = 1; i <= names.length; i++) {
+      names[(i - 1)] = meta.getColumnName(i);
+    }
+    return names;
+  }
+
+  public static Nature[] getNaturesFrom(ResultSet results) throws Exception {
+    var metaData = results.getMetaData();
+    var columnCount = metaData.getColumnCount();
+    var natures = new Nature[columnCount];
+    for (int i = 1; i <= columnCount; i++) {
+      natures[(i - 1)] = WizData.getNatureOfSQL(metaData.getColumnType(i));
+    }
+    return natures;
+  }
+
   public static Nature getNatureOfSQL(int jdbcType) {
     switch (jdbcType) {
       case 16:

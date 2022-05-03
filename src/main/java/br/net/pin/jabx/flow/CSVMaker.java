@@ -1,25 +1,34 @@
 package br.net.pin.jabx.flow;
 
 import java.sql.ResultSet;
+import java.util.List;
 
 import br.net.pin.jabx.data.Nature;
+import br.net.pin.jabx.data.Typed;
 import br.net.pin.jabx.mage.WizData;
 
-public class CSVResults {
+public class CSVMaker {
   private final ResultSet results;
   private final Nature[] natures;
 
-  public CSVResults(ResultSet results, Nature[] natures) throws Exception {
+  public CSVMaker(ResultSet results, List<Typed> typeds) throws Exception {
+    this.results = results;
+    if (typeds != null) {
+      this.natures = new Nature[typeds.size()];
+      for (int i = 0; i < typeds.size(); i++) {
+        this.natures[i] = typeds.get(i).type;
+      }
+    } else {
+      this.natures = WizData.getNaturesFrom(results);
+    }
+  }
+
+  public CSVMaker(ResultSet results, Nature[] natures) throws Exception {
     this.results = results;
     if (natures != null) {
       this.natures = natures;
     } else {
-      var metaData = this.results.getMetaData();
-      var columnCount = metaData.getColumnCount();
-      this.natures = new Nature[columnCount];
-      for (int i = 1; i <= columnCount; i++) {
-        this.natures[(i - 1)] = WizData.getNatureOfSQL(metaData.getColumnType(i));
-      }
+      this.natures = WizData.getNaturesFrom(results);
     }
   }
 
