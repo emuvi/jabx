@@ -2,15 +2,15 @@ package br.net.pin.jabx.data;
 
 public enum DataBase {
 
-  SQLiteLocal("org.sqlite.JDBC", "jdbc:sqlite:$path", null, new HelperSQLite()),
-
   SQLiteMemory("org.sqlite.JDBC", "jdbc:sqlite::memory:", null, new HelperSQLite()),
 
-  HSQLDBLocal("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:$path;hsqldb.lock_file=true",
-      9000, new HelperHSQLDB()),
+  SQLiteLocal("org.sqlite.JDBC", "jdbc:sqlite:$path", null, new HelperSQLite()),
 
   HSQLDBMemory("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:$data", 9000,
       new HelperHSQLDB()),
+
+  HSQLDBLocal("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:$path;hsqldb.lock_file=true",
+      9000, new HelperHSQLDB()),
 
   HSQLDBClient("org.hsqldb.jdbcDriver", "jdbc:hsqldb:hsql://$path:$port/$data", 9000,
       new HelperHSQLDB()),
@@ -33,8 +33,8 @@ public enum DataBase {
   MySQLClient("com.mysql.jdbc.Driver", "jdbc:mysql://$path:$port/$data", 3306,
       new HelperMySQL()),
 
-  PostgresClient("org.postgresql.Driver", "jdbc:postgresql://$path:$port/$data", 5432,
-      new HelperPostgres());
+  PostgreClient("org.postgresql.Driver", "jdbc:postgresql://$path:$port/$data", 5432,
+      new HelperPostgre());
 
   public final String clazz;
   public final String formation;

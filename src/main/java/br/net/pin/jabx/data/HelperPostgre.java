@@ -1,6 +1,6 @@
 package br.net.pin.jabx.data;
 
-public class HelperPostgres extends Helper {
+public class HelperPostgre extends Helper {
   @Override
   public String formNature(Field field) {
     var builder = new StringBuilder(field.name);
