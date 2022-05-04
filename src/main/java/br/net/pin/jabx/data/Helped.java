@@ -6,23 +6,23 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Helped implements Closeable {
-  public Helper helper;
   public Connection link;
+  public Helper helper;
 
   public Helped() {
-  }
-
-  public Helped(Helper helper) {
-    this.helper = helper;
   }
 
   public Helped(Connection link) {
     this.link = link;
   }
 
-  public Helped(Helper helper, Connection link) {
+  public Helped(Helper helper) {
     this.helper = helper;
+  }
+
+  public Helped(Connection link, Helper helper) {
     this.link = link;
+    this.helper = helper;
   }
 
   @Override

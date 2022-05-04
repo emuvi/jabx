@@ -6,13 +6,13 @@ import com.google.gson.Gson;
 
 public class Delete implements Fixable {
   public Registry registry;
-  public List<Clause> clauses;
+  public List<Claused> clauses;
   public Integer limit;
 
   public Delete() {
   }
 
-  public Delete(Registry registry, List<Clause> clauses, Integer limit) {
+  public Delete(Registry registry, List<Claused> clauses, Integer limit) {
     this.registry = registry;
     this.clauses = clauses;
     this.limit = limit;

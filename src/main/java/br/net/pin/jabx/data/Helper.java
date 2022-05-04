@@ -266,7 +266,7 @@ public abstract class Helper {
     return builder.toString();
   }
 
-  public String formClauses(List<Clause> clauses) {
+  public String formClauses(List<Claused> clauses) {
     if ((clauses == null) || clauses.isEmpty()) {
       return "";
     }
@@ -288,7 +288,7 @@ public abstract class Helper {
         builder.append(this.formCondition(clause.likes));
         builder.append(" ? ");
       }
-      nextIsOr = clause.tying == Tying.OR;
+      nextIsOr = clause.ties == Claused.Ties.OR;
     }
     return builder.toString();
   }
