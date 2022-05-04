@@ -13,6 +13,7 @@ public class Registry implements Fixable {
   public String catalog;
   public String schema;
   public String name;
+  public String alias;
 
   public Registry() {
   }
@@ -30,6 +31,13 @@ public class Registry implements Fixable {
     this.catalog = catalog;
     this.schema = schema;
     this.name = name;
+  }
+
+  public Registry(String catalog, String schema, String name, String alias) {
+    this.catalog = catalog;
+    this.schema = schema;
+    this.name = name;
+    this.alias = alias;
   }
 
   public String getSchemaName() {
@@ -77,12 +85,12 @@ public class Registry implements Fixable {
     }
     Registry registry = (Registry) o;
     return Objects.equals(catalog, registry.catalog) && Objects.equals(schema, registry.schema)
-        && Objects.equals(name, registry.name);
+        && Objects.equals(name, registry.name) && Objects.equals(alias, registry.alias);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(catalog, schema, name);
+    return Objects.hash(catalog, schema, name, alias);
   }
 
   @Override
