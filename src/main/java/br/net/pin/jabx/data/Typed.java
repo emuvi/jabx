@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 public class Typed implements Fixable {
   public String name;
   public Nature type;
+  public String alias;
 
   public Typed() {
   }
@@ -16,6 +17,17 @@ public class Typed implements Fixable {
   public Typed(String name, Nature type) {
     this.name = name;
     this.type = type;
+  }
+
+  public Typed(String name, String alias) {
+    this.name = name;
+    this.alias = alias;
+  }
+
+  public Typed(String name, Nature type, String alias) {
+    this.name = name;
+    this.type = type;
+    this.alias = alias;
   }
 
   @Override
