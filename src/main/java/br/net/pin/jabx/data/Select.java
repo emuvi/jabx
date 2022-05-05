@@ -68,6 +68,14 @@ public class Select implements Fixable {
     this.limit = limit;
   }
 
+  public boolean hasJoins() {
+    return this.joins != null && !this.joins.isEmpty();
+  }
+
+  public boolean hasClauses() {
+    return this.clauses != null && !this.clauses.isEmpty();
+  }
+
   @Override
   public String toString() {
     return new Gson().toJson(this);

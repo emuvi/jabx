@@ -36,6 +36,10 @@ public class Joined {
     this.clauses = clauses;
   }
 
+  public boolean hasClauses() {
+    return this.clauses != null && !this.clauses.isEmpty();
+  }
+
   @Override
   public String toString() {
     return new Gson().toJson(this);

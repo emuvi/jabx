@@ -57,10 +57,38 @@ public abstract class Helper {
     }
     builder.append(" FROM ");
     builder.append(select.registry.getSchemaName());
-    builder.append(this.formClauses(select.clauses));
+    if (select.hasJoins()) {
+      for (var join : select.joins) {
+        if (join.ties != null) {
+          builder.append(join.ties.toString());
+        }
+        builder.append(" JOIN ");
+        builder.append(join.registry.getSchemaName());
+        if (join.hasClauses()) {
+          builder.append(" ON ");
+          builder.append(this.formClauses(join.clauses));
+        }
+      }
+    }
+    if (select.hasClauses()) {
+      builder.append(" WHERE ");
+      builder.append(this.formClauses(select.clauses));
+    }
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
-    if (select.clauses != null && !select.clauses.isEmpty()) {
+    if (select.hasJoins()) {
+      for (var join : select.joins) {
+        if (join.hasClauses()) {
+          for (var clause : join.clauses) {
+            if (clause.valued.data != null) {
+              this.setParameter(prepared, param_index, clause.valued);
+              param_index++;
+            }
+          }
+        }
+      }
+    }
+    if (select.hasClauses()) {
       for (var clause : select.clauses) {
         if (clause.valued.data != null) {
           this.setParameter(prepared, param_index, clause.valued);
@@ -129,6 +157,7 @@ public abstract class Helper {
         builder.append("?");
       }
     }
+    builder.append(" WHERE ");
     builder.append(this.formClauses(update.clauses));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
@@ -156,6 +185,7 @@ public abstract class Helper {
   public int delete(Connection link, Delete delete) throws Exception {
     var builder = new StringBuilder("DELETE FROM ");
     builder.append(delete.registry.getSchemaName());
+    builder.append(" WHERE ");
     builder.append(this.formClauses(delete.clauses));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
@@ -271,7 +301,6 @@ public abstract class Helper {
       return "";
     }
     var builder = new StringBuilder();
-    builder.append(" WHERE ");
     var nextIsOr = false;
     for (var i = 0; i < clauses.size(); i++) {
       if (i > 0) {
