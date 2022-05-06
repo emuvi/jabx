@@ -2,18 +2,18 @@ package br.net.pin.jabx.data;
 
 import com.google.gson.Gson;
 
-public class Ordered {
+public class Order {
   public String name;
   public Boolean desc;
 
-  public Ordered() {
+  public Order() {
   }
 
-  public Ordered(String name) {
+  public Order(String name) {
     this.name = name;
   }
 
-  public Ordered(String name, Boolean desc) {
+  public Order(String name, Boolean desc) {
     this.name = name;
     this.desc = desc;
   }
@@ -23,7 +23,7 @@ public class Ordered {
     return new Gson().toJson(this);
   }
 
-  public static Ordered fromString(String json) {
-    return new Gson().fromJson(json, Ordered.class);
+  public static Order fromString(String json) {
+    return new Gson().fromJson(json, Order.class);
   }
 }

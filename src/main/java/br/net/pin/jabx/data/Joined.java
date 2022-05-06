@@ -5,9 +5,9 @@ import java.util.List;
 import com.google.gson.Gson;
 
 public class Joined {
-  public Ties ties;
+  public Joined.Ties ties;
   public Registry registry;
-  public List<Claused> clauses;
+  public List<Filter> filters;
 
   public Joined() {
   }
@@ -25,19 +25,19 @@ public class Joined {
     this.registry = registry;
   }
 
-  public Joined(Registry registry, List<Claused> clauses) {
+  public Joined(Registry registry, List<Filter> filters) {
     this.registry = registry;
-    this.clauses = clauses;
+    this.filters = filters;
   }
 
-  public Joined(Ties ties, Registry registry, List<Claused> clauses) {
+  public Joined(Ties ties, Registry registry, List<Filter> filters) {
     this.ties = ties;
     this.registry = registry;
-    this.clauses = clauses;
+    this.filters = filters;
   }
 
-  public boolean hasClauses() {
-    return this.clauses != null && !this.clauses.isEmpty();
+  public boolean hasFilters() {
+    return this.filters != null && !this.filters.isEmpty();
   }
 
   @Override

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import br.net.pin.jabx.data.Filter.Seems;
 import br.net.pin.jabx.mage.WizData;
 
 public abstract class Helper {
@@ -64,22 +65,22 @@ public abstract class Helper {
         }
         builder.append(" JOIN ");
         builder.append(join.registry.getSchemaName());
-        if (join.hasClauses()) {
+        if (join.hasFilters()) {
           builder.append(" ON ");
-          builder.append(this.formClauses(join.clauses));
+          builder.append(this.formClauses(join.filters));
         }
       }
     }
-    if (select.hasClauses()) {
+    if (select.hasFilters()) {
       builder.append(" WHERE ");
-      builder.append(this.formClauses(select.clauses));
+      builder.append(this.formClauses(select.filters));
     }
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
     if (select.hasJoins()) {
       for (var join : select.joins) {
-        if (join.hasClauses()) {
-          for (var clause : join.clauses) {
+        if (join.hasFilters()) {
+          for (var clause : join.filters) {
             if (clause.valued.data != null) {
               this.setParameter(prepared, param_index, clause.valued);
               param_index++;
@@ -88,8 +89,8 @@ public abstract class Helper {
         }
       }
     }
-    if (select.hasClauses()) {
-      for (var clause : select.clauses) {
+    if (select.hasFilters()) {
+      for (var clause : select.filters) {
         if (clause.valued.data != null) {
           this.setParameter(prepared, param_index, clause.valued);
           param_index++;
@@ -158,7 +159,7 @@ public abstract class Helper {
       }
     }
     builder.append(" WHERE ");
-    builder.append(this.formClauses(update.clauses));
+    builder.append(this.formClauses(update.filters));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
     for (var valued : update.valueds) {
@@ -167,8 +168,8 @@ public abstract class Helper {
         param_index++;
       }
     }
-    if (update.clauses != null && !update.clauses.isEmpty()) {
-      for (var clause : update.clauses) {
+    if (update.filters != null && !update.filters.isEmpty()) {
+      for (var clause : update.filters) {
         if (clause.valued != null) {
           this.setParameter(prepared, param_index, clause.valued);
           param_index++;
@@ -186,11 +187,11 @@ public abstract class Helper {
     var builder = new StringBuilder("DELETE FROM ");
     builder.append(delete.registry.getSchemaName());
     builder.append(" WHERE ");
-    builder.append(this.formClauses(delete.clauses));
+    builder.append(this.formClauses(delete.filters));
     var prepared = link.prepareStatement(builder.toString());
     var param_index = 1;
-    if (delete.clauses != null && !delete.clauses.isEmpty()) {
-      for (var clause : delete.clauses) {
+    if (delete.filters != null && !delete.filters.isEmpty()) {
+      for (var clause : delete.filters) {
         if (clause.valued.data != null) {
           this.setParameter(prepared, param_index, clause.valued);
           param_index++;
@@ -296,17 +297,17 @@ public abstract class Helper {
     return builder.toString();
   }
 
-  public String formClauses(List<Claused> clauses) {
-    if ((clauses == null) || clauses.isEmpty()) {
+  public String formClauses(List<Filter> filters) {
+    if ((filters == null) || filters.isEmpty()) {
       return "";
     }
     var builder = new StringBuilder();
     var nextIsOr = false;
-    for (var i = 0; i < clauses.size(); i++) {
+    for (var i = 0; i < filters.size(); i++) {
       if (i > 0) {
         builder.append(nextIsOr ? " OR " : " AND ");
       }
-      var clause = clauses.get(i);
+      var clause = filters.get(i);
       if (clause.seems == Seems.DIVERSE) {
         builder.append(" NOT ");
       }
@@ -317,12 +318,12 @@ public abstract class Helper {
         builder.append(this.formCondition(clause.likes));
         builder.append(" ? ");
       }
-      nextIsOr = clause.ties == Claused.Ties.OR;
+      nextIsOr = clause.ties == Filter.Ties.OR;
     }
     return builder.toString();
   }
 
-  public String formCondition(Likes condition) {
+  public String formCondition(Filter.Likes condition) {
     switch (condition) {
       case EQUALS:
         return "=";
