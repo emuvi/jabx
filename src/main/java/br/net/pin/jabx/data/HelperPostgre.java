@@ -92,4 +92,28 @@ public class HelperPostgre extends Helper {
     }
     return builder.toString();
   }
+
+  @Override
+  public String formCondition(Filter.Likes condition) {
+    switch (condition) {
+      case EQUALS:
+        return " = ? ";
+      case BIGGER:
+        return " > ? ";
+      case LESSER:
+        return " < ? ";
+      case BIGGER_EQUALS:
+        return " >= ? ";
+      case LESSER_EQUALS:
+        return " <= ? ";
+      case STARTS_WITH:
+        return " LIKE ? || '%' ";
+      case ENDS_WITH:
+        return " LIKE '%' || ? ";
+      case CONTAINS:
+        return " LIKE '%' || ? || '%' ";
+      default:
+        throw new UnsupportedOperationException();
+    }
+  }
 }

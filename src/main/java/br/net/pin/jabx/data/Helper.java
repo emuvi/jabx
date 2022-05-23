@@ -316,7 +316,6 @@ public abstract class Helper {
         builder.append(" IS NULL ");
       } else {
         builder.append(this.formCondition(clause.likes));
-        builder.append(" ? ");
       }
       nextIsOr = clause.ties == Filter.Ties.OR;
     }
@@ -326,21 +325,21 @@ public abstract class Helper {
   public String formCondition(Filter.Likes condition) {
     switch (condition) {
       case EQUALS:
-        return "=";
+        return " = ? ";
       case BIGGER:
-        return ">";
+        return " > ? ";
       case LESSER:
-        return "<";
+        return " < ? ";
       case BIGGER_EQUALS:
-        return ">=";
+        return " >= ? ";
       case LESSER_EQUALS:
-        return "<=";
+        return " <= ? ";
       case STARTS_WITH:
-        return "STARTS WITH";
+        return " STARTS WITH ? ";
       case ENDS_WITH:
-        return "ENDS WITH";
+        return " ENDS WITH ? ";
       case CONTAINS:
-        return "CONTAINS";
+        return " CONTAINS ? ";
       default:
         throw new UnsupportedOperationException();
     }
