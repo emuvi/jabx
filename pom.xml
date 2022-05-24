@@ -2,10 +2,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>br.net.pin</groupId>
-  <artifactId>Jabx</artifactId>
+  <artifactId>jabx</artifactId>
   <version>0.1.0</version>
   <packaging>jar</packaging>
-  <name>jabx</name>
+  <name>Jabx</name>
   <url>https://github.com/emuvi/jabx</url>
   <description>Jabx (Java Basic Toolbox) is a library for command programs that features a toolbox with a series of basic functionalities.</description>
 
@@ -74,12 +74,12 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-              <mainClass>br.net.pin.${project.artifactId}</mainClass>
+              <mainClass>br.net.pin.${project.name}</mainClass>
               <classpathPrefix>lib/</classpathPrefix>
               <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
             </manifest>
           </archive>
-          <finalName>${project.name}</finalName>
+          <finalName>${project.artifactId}</finalName>
           <outputDirectory>build</outputDirectory>
         </configuration>
       </plugin>
