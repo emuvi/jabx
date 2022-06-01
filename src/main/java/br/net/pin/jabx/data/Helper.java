@@ -65,6 +65,10 @@ public abstract class Helper {
         }
         builder.append(" JOIN ");
         builder.append(join.registry.getSchemaName());
+        if (join.alias != null) {
+          builder.append(" AS ");
+          builder.append(join.alias);
+        }
         if (join.hasFilters()) {
           builder.append(" ON ");
           builder.append(this.formClauses(join.filters));
