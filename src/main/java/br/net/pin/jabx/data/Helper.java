@@ -48,15 +48,17 @@ public abstract class Helper {
     var builder = new StringBuilder("SELECT ");
     var fromSource = select.registry.getCatalogSchemaName();
     var fromAlias = select.registry.alias != null ? select.registry.alias : fromSource;
-    if (select.fields == null || !select.fields.isEmpty()) {
+    if (select.fields == null || select.fields.isEmpty()) {
       builder.append("*");
     } else {
       for (var i = 0; i < select.fields.size(); i++) {
         if (i > 0) {
           builder.append(", ");
         }
-        builder.append(fromAlias);
-        builder.append(".");
+        if (!select.fields.get(i).name.contains(".")) {
+          builder.append(fromAlias);
+          builder.append(".");
+        }
         builder.append(select.fields.get(i).name);
       }
     }
