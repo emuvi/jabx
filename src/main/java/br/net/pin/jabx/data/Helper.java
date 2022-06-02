@@ -312,42 +312,54 @@ public abstract class Helper {
     var builder = new StringBuilder();
     var nextIsOr = false;
     for (var i = 0; i < filters.size(); i++) {
+      var clause = filters.get(i);
+      if (clause.valued == null && clause.linked == null) {
+        continue;
+      }
       if (i > 0) {
         builder.append(nextIsOr ? " OR " : " AND ");
       }
-      var clause = filters.get(i);
       if (clause.seems == Seems.DIVERSE) {
         builder.append(" NOT ");
       }
-      builder.append(clause.valued.name);
-      if (clause.valued.data == null) {
-        builder.append(" IS NULL ");
-      } else {
-        builder.append(this.formCondition(clause.likes));
+      if (clause.valued != null) {
+        builder.append(clause.valued.name);
+        if (clause.valued.data == null) {
+          builder.append(" IS NULL ");
+        } else {
+          builder.append(this.formCondition(clause.likes, "?"));
+        }
+      } else if (clause.linked != null) {
+        builder.append(clause.linked.name);
+        if (clause.linked.with == null) {
+          builder.append(" IS NULL ");
+        } else {
+          builder.append(this.formCondition(clause.likes, clause.linked.with));
+        }
       }
       nextIsOr = clause.ties == Filter.Ties.OR;
     }
     return builder.toString();
   }
 
-  public String formCondition(Filter.Likes condition) {
+  public String formCondition(Filter.Likes condition, String with) {
     switch (condition) {
       case EQUALS:
-        return " = ? ";
+        return " = " + with + " ";
       case BIGGER:
-        return " > ? ";
+        return " > " + with + " ";
       case LESSER:
-        return " < ? ";
+        return " < " + with + " ";
       case BIGGER_EQUALS:
-        return " >= ? ";
+        return " >= " + with + " ";
       case LESSER_EQUALS:
-        return " <= ? ";
+        return " <= " + with + " ";
       case STARTS_WITH:
-        return " STARTS WITH ? ";
+        return " STARTS WITH " + with + " ";
       case ENDS_WITH:
-        return " ENDS WITH ? ";
+        return " ENDS WITH " + with + " ";
       case CONTAINS:
-        return " CONTAINS ? ";
+        return " CONTAINS " + with + " ";
       default:
         throw new UnsupportedOperationException();
     }

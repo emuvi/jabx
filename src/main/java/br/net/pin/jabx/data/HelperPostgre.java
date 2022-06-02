@@ -94,24 +94,24 @@ public class HelperPostgre extends Helper {
   }
 
   @Override
-  public String formCondition(Filter.Likes condition) {
+  public String formCondition(Filter.Likes condition, String with) {
     switch (condition) {
       case EQUALS:
-        return " = ? ";
+        return " = " + with + " ";
       case BIGGER:
-        return " > ? ";
+        return " > " + with + " ";
       case LESSER:
-        return " < ? ";
+        return " < " + with + " ";
       case BIGGER_EQUALS:
-        return " >= ? ";
+        return " >= " + with + " ";
       case LESSER_EQUALS:
-        return " <= ? ";
+        return " <= " + with + " ";
       case STARTS_WITH:
-        return " LIKE ? || '%' ";
+        return " LIKE " + with + " || '%' ";
       case ENDS_WITH:
-        return " LIKE '%' || ? ";
+        return " LIKE '%' || " + with + " ";
       case CONTAINS:
-        return " LIKE '%' || ? || '%' ";
+        return " LIKE '%' || " + with + " || '%' ";
       default:
         throw new UnsupportedOperationException();
     }
