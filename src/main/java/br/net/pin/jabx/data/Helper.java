@@ -58,6 +58,10 @@ public abstract class Helper {
     }
     builder.append(" FROM ");
     builder.append(select.registry.getSchemaName());
+    if (select.registry.alias != null) {
+      builder.append(" AS ");
+      builder.append(select.registry.alias);
+    }
     if (select.hasJoins()) {
       for (var join : select.joins) {
         if (join.ties != null) {
