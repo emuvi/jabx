@@ -46,6 +46,8 @@ public abstract class Helper {
 
   public ResultSet select(Connection link, Select select) throws Exception {
     var builder = new StringBuilder("SELECT ");
+    var fromSource = select.registry.getCatalogSchemaName();
+    var fromAlias = select.registry.alias != null ? select.registry.alias : fromSource;
     if (select.fields == null || !select.fields.isEmpty()) {
       builder.append("*");
     } else {
@@ -53,14 +55,16 @@ public abstract class Helper {
         if (i > 0) {
           builder.append(", ");
         }
+        builder.append(fromAlias);
+        builder.append(".");
         builder.append(select.fields.get(i).name);
       }
     }
     builder.append(" FROM ");
-    builder.append(select.registry.getSchemaName());
+    builder.append(fromSource);
     if (select.registry.alias != null) {
       builder.append(" AS ");
-      builder.append(select.registry.alias);
+      builder.append(fromAlias);
     }
     if (select.hasJoins()) {
       for (var join : select.joins) {
@@ -68,42 +72,27 @@ public abstract class Helper {
           builder.append(join.ties.toString());
         }
         builder.append(" JOIN ");
-        builder.append(join.registry.getSchemaName());
+        var withSource = join.registry.getCatalogSchemaName();
+        var withAlias = withSource;
+        builder.append(withSource);
         if (join.alias != null) {
           builder.append(" AS ");
-          builder.append(join.alias);
+          withAlias = join.alias;
+          builder.append(withAlias);
+        } else if (join.registry.alias != null) {
+          builder.append(" AS ");
+          withAlias = join.registry.alias;
+          builder.append(withAlias);
         }
         if (join.hasFilters()) {
           builder.append(" ON ");
-          builder.append(this.formClauses(join.filters));
+          builder.append(this.formClauses(join.filters, fromAlias, withAlias));
         }
       }
     }
     if (select.hasFilters()) {
       builder.append(" WHERE ");
-      builder.append(this.formClauses(select.filters));
-    }
-    var prepared = link.prepareStatement(builder.toString());
-    var param_index = 1;
-    if (select.hasJoins()) {
-      for (var join : select.joins) {
-        if (join.hasFilters()) {
-          for (var clause : join.filters) {
-            if (clause.valued.data != null) {
-              this.setParameter(prepared, param_index, clause.valued);
-              param_index++;
-            }
-          }
-        }
-      }
-    }
-    if (select.hasFilters()) {
-      for (var clause : select.filters) {
-        if (clause.valued.data != null) {
-          this.setParameter(prepared, param_index, clause.valued);
-          param_index++;
-        }
-      }
+      builder.append(this.formClauses(select.filters, fromAlias, null));
     }
     if (select.limit != null) {
       builder.append(" LIMIT ");
@@ -113,6 +102,31 @@ public abstract class Helper {
       builder.append(" OFFSET ");
       builder.append(select.offset);
     }
+    var build = builder.toString();
+    System.out.println("SELECT: " + build);
+    var prepared = link.prepareStatement(build);
+    var param_index = 1;
+    if (select.hasJoins()) {
+      for (var join : select.joins) {
+        if (join.hasFilters()) {
+          for (var clause : join.filters) {
+            if (clause.valued != null && clause.valued.data != null) {
+              this.setParameter(prepared, param_index, clause.valued);
+              param_index++;
+            }
+          }
+        }
+      }
+    }
+    if (select.hasFilters()) {
+      for (var clause : select.filters) {
+        if (clause.valued != null && clause.valued.data != null) {
+          this.setParameter(prepared, param_index, clause.valued);
+          param_index++;
+        }
+      }
+    }
+
     return prepared.executeQuery();
   }
 
@@ -139,7 +153,9 @@ public abstract class Helper {
       }
     }
     builder.append(")");
-    var prepared = link.prepareStatement(builder.toString());
+    var build = builder.toString();
+    System.out.println("INSERT: " + build);
+    var prepared = link.prepareStatement(build);
     var param_index = 1;
     for (var valued : insert.valueds) {
       if (valued != null) {
@@ -167,8 +183,14 @@ public abstract class Helper {
       }
     }
     builder.append(" WHERE ");
-    builder.append(this.formClauses(update.filters));
-    var prepared = link.prepareStatement(builder.toString());
+    builder.append(this.formClauses(update.filters, null, null));
+    if (update.limit != null) {
+      builder.append(" LIMIT ");
+      builder.append(update.limit);
+    }
+    var build = builder.toString();
+    System.out.println("UPDATE: " + build);
+    var prepared = link.prepareStatement(build);
     var param_index = 1;
     for (var valued : update.valueds) {
       if (valued != null) {
@@ -184,19 +206,21 @@ public abstract class Helper {
         }
       }
     }
-    if (update.limit != null) {
-      builder.append(" LIMIT ");
-      builder.append(update.limit);
-    }
     return prepared.executeUpdate();
   }
 
   public int delete(Connection link, Delete delete) throws Exception {
     var builder = new StringBuilder("DELETE FROM ");
-    builder.append(delete.registry.getSchemaName());
+    builder.append(delete.registry.getCatalogSchemaName());
     builder.append(" WHERE ");
-    builder.append(this.formClauses(delete.filters));
-    var prepared = link.prepareStatement(builder.toString());
+    builder.append(this.formClauses(delete.filters, null, null));
+    if (delete.limit != null) {
+      builder.append(" LIMIT ");
+      builder.append(delete.limit);
+    }
+    var build = builder.toString();
+    System.out.println("DELETE: " + build);
+    var prepared = link.prepareStatement(build);
     var param_index = 1;
     if (delete.filters != null && !delete.filters.isEmpty()) {
       for (var clause : delete.filters) {
@@ -205,10 +229,6 @@ public abstract class Helper {
           param_index++;
         }
       }
-    }
-    if (delete.limit != null) {
-      builder.append(" LIMIT ");
-      builder.append(delete.limit);
     }
     return prepared.executeUpdate();
   }
@@ -305,7 +325,7 @@ public abstract class Helper {
     return builder.toString();
   }
 
-  public String formClauses(List<Filter> filters) {
+  public String formClauses(List<Filter> filters, String from, String with) {
     if ((filters == null) || filters.isEmpty()) {
       return "";
     }
@@ -323,6 +343,10 @@ public abstract class Helper {
         builder.append(" NOT ");
       }
       if (clause.valued != null) {
+        if (from != null && !from.isEmpty()) {
+          builder.append(from);
+          builder.append(".");
+        }
         builder.append(clause.valued.name);
         if (clause.valued.data == null) {
           builder.append(" IS NULL ");
@@ -330,11 +354,21 @@ public abstract class Helper {
           builder.append(this.formCondition(clause.likes, "?"));
         }
       } else if (clause.linked != null) {
+        if (from != null && !from.isEmpty()) {
+          builder.append(from);
+          builder.append(".");
+        }
         builder.append(clause.linked.name);
         if (clause.linked.with == null) {
           builder.append(" IS NULL ");
         } else {
-          builder.append(this.formCondition(clause.likes, clause.linked.with));
+          var formWith = new StringBuilder();
+          if (with != null && !with.isEmpty()) {
+            formWith.append(with);
+            formWith.append(".");
+          }
+          formWith.append(clause.linked.with);
+          builder.append(this.formCondition(clause.likes, formWith.toString()));
         }
       }
       nextIsOr = clause.ties == Filter.Ties.OR;
