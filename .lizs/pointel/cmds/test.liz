@@ -33,7 +33,7 @@ for _, path in pairs(Liz.path_env_dirs()) do
 end
 
 if Liz.has("CMakeLists.txt") then
-    local origin_dir = "build/bin"
+    local origin_dir = "build/bin/Debug"
     Liz.rm(destiny_dir)
     Liz.cp(origin_dir, destiny_dir)
     if tooled_dir then
