@@ -153,6 +153,21 @@ public class WizChars {
     return builder.toString();
   }
 
+  public static String replaceLettersOrDigits(String ofString, char withChar) {
+    if (ofString == null) {
+      return null;
+    }
+    var builder = new StringBuilder();
+    for (char ch : ofString.toCharArray()) {
+      if (Character.isLetter(ch) || Character.isDigit(ch)) {
+        builder.append(withChar);
+      } else {
+        builder.append(ch);
+      }
+    }
+    return builder.toString();
+  }
+
   public static String fill(char withChar, int untilLength) {
     return WizChars.fill(null, withChar, untilLength, true);
   }

@@ -27,12 +27,12 @@ public class WizDate {
         }
       }
     }
-    throw new Exception("Could not convert this value to a date value.");
+    throw new Exception("Could not convert the value of class " + fromValue.getClass().getName() + " to a date value.");
   }
 
   public static boolean is(String str, SimpleDateFormat inFormat) {
-    return Objects.equals(WizChars.getNonLettersAndNonDigits(str), WizChars
-        .getNonLettersAndNonDigits(inFormat.toPattern()));
+    return Objects.equals(WizChars.replaceLettersOrDigits(str, 'x'), WizChars
+        .replaceLettersOrDigits(inFormat.toPattern(), 'x'));
   }
 
   public static String formatDate(Date date) {

@@ -242,14 +242,8 @@ public class WizData {
     return data.toString();
   }
 
-  public static Date getDate(Object data) {
-    if (data == null) {
-      return null;
-    }
-    if (data instanceof Date) {
-      return (Date) data;
-    }
-    throw new RuntimeException("Could not convert to Date from class: " + data.getClass().getCanonicalName());
+  public static Date getDate(Object data) throws Exception {
+    return new Date(WizDate.get(data).getTime());
   }
 
   public static Time getTime(Object data) {
